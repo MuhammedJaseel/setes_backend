@@ -131,7 +131,7 @@ app.get("/conn", getAllConnectedSocket);
 
 app.get("*", (req, res) => res.send("Hello World!"));
 var port = 8000;
-const server = app.listen(port, () => console.log("Started on" + port));
+const server = app.listen(port, () => console.log("Started on " + port));
 const wss = new WebSocket.Server({ server });
 connectWebSocket(wss);
 
