@@ -130,9 +130,7 @@ app.post("/ctaker/matchevent", ctakerAuth, ctakerAddEvent);
 app.get("/conn", getAllConnectedSocket);
 
 app.get("*", (req, res) => res.send("Hello World!"));
-const server = app.listen(process.env.PORT || 3010, () =>
-  console.log("Started")
-);
+const server = app.listen(3000, () => console.log("Started on 3000"));
 const wss = new WebSocket.Server({ server });
 connectWebSocket(wss);
 
