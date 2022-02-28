@@ -54,11 +54,9 @@ exports.adminPostEvent = function (req, res) {
         fs.writeFile(path, req.files.img.data, function (err) {
           if (err) throw err;
           else
-            putTable(
-              "events",
-              { _id: data.insertedId },
-              { $set: { img } }
-            ).then((res) => console.log(res).catch((err) => console.log(err)));
+            putTable("events", { _id: data.insertedId }, { $set: { img } })
+              .then((res) => console.log(res))
+              .catch((err) => console.log(err));
         });
       }
     })
