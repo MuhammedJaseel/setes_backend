@@ -48,14 +48,13 @@ exports.adminPostEvent = function (req, res) {
     .then((data) => {
       res.send({ msg: "Succesfully Inserted" });
       if (req.files != null) {
-        console.log(data);
         var img = data.insertedId + "." + req.files.img.name.split(".")[1];
         var path = "public_asset/events/" + img;
         fs.writeFile(path, req.files.img.data, function (err) {
           if (err) throw err;
           else
             putTable("events", { _id: data.insertedId }, { $set: { img } })
-              .then((res) => console.log(res))
+              .then((res) => {})
               .catch((err) => console.log(err));
         });
       }
@@ -74,7 +73,7 @@ exports.adminPutEvent = function (req, res) {
   var body = JSON.parse(req.body.body);
   body.updated = Date();
   putTable("events", { _id }, { $set: body })
-    .then((data) => {
+    .then(() => {
       res.send({ msg: "Succesfully Updated" });
       if (req.files != null) {
         var img = _id + "." + req.files.img.name.split(".")[1];

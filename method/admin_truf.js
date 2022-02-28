@@ -57,7 +57,8 @@ exports.adminPostTruf = async (req, res) => {
         if (!fs.existsSync(dir)) fs.mkdirSync(dir);
         if (req.files.img1 != null) {
           var image = req.files.img1;
-          var type = image.mimetype.split("/")[1];
+          const types = image.name.split(".");
+          const type = image.name.split(".")[types.length - 1];
           var path = `public_asset/trufs/${_id}/img1.${type}`;
           fs.writeFile(path, image.data, function (err) {
             if (err) throw err;
@@ -69,7 +70,8 @@ exports.adminPostTruf = async (req, res) => {
         }
         if (req.files.img2 != null) {
           var image = req.files.img2;
-          var type = image.mimetype.split("/")[1];
+          const types = image.name.split(".");
+          const type = image.name.split(".")[types.length - 1];
           var path = `public_asset/trufs/${_id}/img2.${type}`;
           fs.writeFile(path, image.data, function (err) {
             if (err) throw err;
@@ -81,7 +83,8 @@ exports.adminPostTruf = async (req, res) => {
         }
         if (req.files.img3 != null) {
           var image = req.files.img3;
-          var type = image.mimetype.split("/")[1];
+          const types = image.name.split(".");
+          const type = image.name.split(".")[types.length - 1];
           var path = `public_asset/trufs/${_id}/img3.${type}`;
           fs.writeFile(path, image.data, function (err) {
             if (err) throw err;
@@ -109,6 +112,7 @@ exports.adminPutTruf = function (req, res) {
   putTable("trufs", { _id }, { $set: body })
     .then((data) => {
       res.send({ msg: "Succesfully Updated" });
+      console.log(req.files);
       if (req.files != null) {
         var _id = data.insertedId;
         var img = [];
