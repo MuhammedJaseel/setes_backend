@@ -137,6 +137,8 @@ connectWebSocket(wss);
 
 // git add .
 // git commit -m "seconds Commit"
+// git push origin main
+
 // git push heroku master
 // git init
 // heroku git:remote -a apisetes
