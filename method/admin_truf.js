@@ -113,7 +113,6 @@ exports.adminPutTruf = function (req, res) {
     .then((data) => {
       res.send({ msg: "Succesfully Updated" });
       if (req.files != null) {
-        var _id = data.insertedId;
         var img = [];
         var dir = `./public_asset/trufs/${_id}`;
         if (!fs.existsSync(dir)) fs.mkdirSync(dir);
