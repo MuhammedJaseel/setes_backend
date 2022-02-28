@@ -112,7 +112,6 @@ exports.adminPutTruf = function (req, res) {
   putTable("trufs", { _id }, { $set: body })
     .then((data) => {
       res.send({ msg: "Succesfully Updated" });
-      console.log(req.files);
       if (req.files != null) {
         var _id = data.insertedId;
         var img = [];
@@ -123,6 +122,7 @@ exports.adminPutTruf = function (req, res) {
           const types = image.name.split(".");
           const type = image.name.split(".")[types.length - 1];
           var path = `public_asset/trufs/${_id}/img1.${type}`;
+          console.log(path);
           fs.writeFile(path, image.data, function (err) {
             if (err) throw err;
             else {
