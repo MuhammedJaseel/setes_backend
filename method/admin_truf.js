@@ -110,7 +110,7 @@ exports.adminPutTruf = function (req, res) {
   var body = JSON.parse(req.body.body);
   body.updated = Date();
   putTable("trufs", { _id }, { $set: body })
-    .then((data) => {
+    .then(() => {
       res.send({ msg: "Succesfully Updated" });
       if (req.files != null) {
         var img = [];
