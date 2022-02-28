@@ -5,9 +5,6 @@ exports.adminGetHome = async function (req, res) {
   var homedata = {};
   var error = false;
 
-  var timer = new Date();
-  console.log(timer);
-
   //   Users
   await getTables("users", {
     sort: { _id: -1 },
@@ -221,10 +218,6 @@ exports.adminGetHome = async function (req, res) {
   } else homedata.assets = assets.body;
 
   if (error) return;
-
-  
-  timer = new Date();
-  console.log(timer);
 
   res.send(homedata);
 };
