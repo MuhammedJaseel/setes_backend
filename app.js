@@ -3,6 +3,8 @@ const app = express();
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const WebSocket = require("ws");
+var https = require("https");
+var fs = require("fs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
@@ -131,7 +133,16 @@ app.get("/conn", getAllConnectedSocket);
 
 app.get("*", (req, res) => res.send("Hello World!"));
 var port = 8000;
-const server = app.listen(port, () => console.log("Started on " + port));
+// const server = app.listen(port, () => console.log("Started on " + port));
+const server = https
+  .createServer(
+    {
+      key: fs.readFileSync("server.key"),
+      cert: fs.readFileSync("server.cert"),
+    },
+    app
+  )
+  .listen(port, () => console.log("https://localhost:" + port));
 const wss = new WebSocket.Server({ server });
 connectWebSocket(wss);
 
