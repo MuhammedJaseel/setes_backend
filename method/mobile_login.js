@@ -4,7 +4,6 @@ const { putTable, getTables } = require("../module/database");
 exports.mobileLogin = (req, res) => {
   var otpset;
   var checked = false;
-  console.log(req.body);
   for (let i = 0; i < otpStore.length; i++) {
     if (otpStore[i].pin === req.body.pin) {
       if (otpStore[i].otp !== req.body.otp) {
@@ -97,7 +96,6 @@ exports.mobileEnterasGust = async (req, res) => {
   var key = Math.random().toString();
   await getTables("users", { limit: 1, filter: { guest: true } })
     .then((user) => {
-      console.log(user);
       var guest_id = "1";
       if (user.length !== 0)
         if (user[0].gust_id !== null)
