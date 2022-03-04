@@ -13,6 +13,7 @@ exports.ctakerGetMatch = async (req, res) => {
     return;
   }
   var error = null;
+
   await getTable("bookings", { _id })
     .then(async (booking) => {
       if (booking === null) {
@@ -25,7 +26,25 @@ exports.ctakerGetMatch = async (req, res) => {
           }
           await getTables("users", {
             filter: { _id: { $in: booking.authers } },
-            project: { name: 1, id: 1, img: 1 },
+            project: {
+              name: 1,
+              id: 1,
+              img: 1,
+              phone: 1,
+              email: 1,
+              blood_group: 1,
+              bootsize: 1,
+              district: 1,
+              fav_position: 1,
+              home_truf: 1,
+              prime: 1,
+              sex: 1,
+              strong_foot: 1,
+              t_shirt_size: 1,
+              zone: 1,
+              goals: 1,
+              ycs: 1,
+            },
           })
             .then((users) => (booking.authers = users))
             .catch(() => {
