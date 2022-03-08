@@ -123,7 +123,7 @@ exports.mobileVerifyBooking = async (req, res) => {
             }
             for (let k = 0; k < authers.length; k++) {
               if (authers[k] === body.user_id) {
-                const msg = "You are allready booked to the uorrent slot";
+                const msg = "You are allready booked to the current slot";
                 res.status(400).send({ msg });
                 return 0;
               }
@@ -221,7 +221,7 @@ exports.mobileBookTruf = async (req, res) => {
             if (authers[k] === body.user_id) {
               res
                 .status(400)
-                .send({ msg: "You are allready booked to the uorrent slot" });
+                .send({ msg: "You are allready booked to the current slot" });
               return 0;
             }
           }
