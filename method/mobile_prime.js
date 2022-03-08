@@ -83,7 +83,10 @@ exports.mobileGetPrimedetails = async (req, res) => {
 };
 
 exports.mobileGetPrimetrufs = async (req, res) => {
-  await getTables("trufs", { filter: { zone: req.query.zone } })
+  await getTables("trufs", {
+    filter: { zone: req.query.zone },
+    project: { name: 1, id: 1 },
+  })
     .then((trufs) => res.send(trufs))
     .catch((e) => res.status(502).send({ msg: "Database Error" }));
 };
