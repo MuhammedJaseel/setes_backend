@@ -4,16 +4,20 @@ var ObjectId = require("mongodb").ObjectId;
 exports.mobileVerifyBooking = async (req, res) => {
   // body={ slot_id, date, type, user_id }
   var body = req.body;
-  var _id;
+  var slot = {};
+  var booking_user = {};
+  var error = false;
+  var slot_id;
+  var user_id;
   try {
-    _id = ObjectId(body.slot_id);
+    slot_id = ObjectId(body.slot_id);
+    user_id = ObjectId(body.user_id);
   } catch (error) {
     res.status(502).send({ msg: "Database Error 1" });
     return;
   }
-  var slot = {};
-  var error = false;
-  await getTable("slots", { _id })
+
+  await getTable("slots", { _id: slot_id })
     .then((data) => {
       if (data == null) {
         res.status(400).send({ msg: "Slot not found" });
@@ -24,26 +28,32 @@ exports.mobileVerifyBooking = async (req, res) => {
 
   if (error) return;
 
+  await getTable("users", { _id: user_id })
+    .then((user) => {
+      if (user != null) booking_user = user;
+      else {
+        res.status(502).send({ msg: "User not fount" });
+        error = true;
+      }
+    })
+    .catch(() => {
+      res.status(502).send({ msg: "Errro on getting user details" });
+      error = true;
+    });
+
+  if (error) return;
+
   await getTable("bookings", { slot_id: body.slot_id, date: body.date })
     .then((data) => {
-      if (data === null) {
-        getTable("users", { _id })
-          .then((user) => {
-            if (user != null)
-              res.send({ wallet: user.wallet, credit: user.credit });
-            else res.status(502).send({ msg: "User not fount" });
-          })
-          .catch(() => res.status(502).send({ msg: "Database Error 2" }));
-      } else {
-        if (data.type !== body.type) {
-          getTable("users", { _id })
-            .then((user) => {
-              if (user != null)
-                res.send({ wallet: user.wallet, credit: user.credit });
-              else res.status(502).send({ msg: "User not fount" });
-            })
-            .catch(() => res.status(502).send({ msg: "Database Error 2" }));
-        } else {
+      if (data === null)
+        res.send({ wallet: booking_user.wallet, credit: booking_user.credit });
+      else {
+        if (data.type !== body.type)
+          res.send({
+            wallet: booking_user.wallet,
+            credit: booking_user.credit,
+          });
+        else {
           if (body.type === "s") {
             const authers = data.authers;
             if (
@@ -62,19 +72,10 @@ exports.mobileVerifyBooking = async (req, res) => {
                 return 0;
               }
             }
-            try {
-              _id = ObjectId(body.user_id);
-            } catch (error) {
-              res.status(502).send({ msg: "Database Error on user Id" });
-              return;
-            }
-            getTable("users", { _id })
-              .then((user) => {
-                if (user != null)
-                  res.send({ wallet: user.wallet, credit: user.credit });
-                else res.status(502).send({ msg: "User not fount" });
-              })
-              .catch(() => res.status(502).send({ msg: "Database Error 2" }));
+            res.send({
+              wallet: booking_user.wallet,
+              credit: booking_user.credit,
+            });
           } else res.status(400).send({ msg: "Slot is Allready Booked" });
         }
       }
@@ -97,7 +98,11 @@ exports.mobileBookTruf = async (req, res) => {
     updated: [],
     status: "Booked",
   };
+
   var _id;
+  var slot = {};
+  var booking_user = {};
+  var error = false;
 
   try {
     _id = ObjectId(body.slot_id);
@@ -105,9 +110,7 @@ exports.mobileBookTruf = async (req, res) => {
     res.status(502).send({ msg: "Database Error 1" });
     return;
   }
-  var slot = {};
-  var booking_user = {};
-  var error = false;
+
   await getTable("slots", { _id })
     .then((data) => {
       if (data == null) {
