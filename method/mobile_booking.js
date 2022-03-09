@@ -87,7 +87,7 @@ exports.mobileBookTruf = async (req, res) => {
     status: "Booked",
   };
   var _id;
-  if (body.ac_type !== bank) {
+  if (body.ac_type !== "bank") {
     console.log(body);
     var msg = "Wallet and Credit booking is not avalible for this.";
     res.status(502).send({ msg });
