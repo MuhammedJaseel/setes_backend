@@ -14,11 +14,6 @@ exports.getTable = function (table, filter) {
   return db.collection(table).findOne(filter);
 };
 
-exports.getFtable = function (table, filter, props) {
-  const project = props.project ?? {};
-  return db.collection(table).findOne(filter).project(project);
-};
-
 exports.getTables = function (table, props) {
   const filter = props.filter ?? {};
   const limit = props.limit ?? 100;

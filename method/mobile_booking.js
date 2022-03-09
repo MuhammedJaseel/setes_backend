@@ -1,5 +1,4 @@
-const { getTable, getFtable } = require("../module/database");
-const { postTable, putTable } = require("../module/database");
+const { postTable, putTable, getTable } = require("../module/database");
 var ObjectId = require("mongodb").ObjectId;
 
 exports.mobileVerifyBooking = async (req, res) => {
@@ -115,7 +114,7 @@ exports.mobileBookTruf = async (req, res) => {
       res.status(502).send({ msg: "Database Error 1" });
       return;
     }
-    await getFtable("users", { _id })
+    await getTable("users", { _id })
       .then((user) => {
         booking_user = user;
         if (user[body.ac_type] < slot.price) {
