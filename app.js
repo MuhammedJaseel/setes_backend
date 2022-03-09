@@ -20,8 +20,7 @@ const { mobileRegister } = require("./method/mobile_register");
 const { mobileGethome } = require("./method/mobile_home");
 const { mobileGetseteshome } = require("./method/mobile_seteshome");
 const { mobileScorebord } = require("./method/mobils_scorebord");
-const { mobileGetTrufs, mobileVerifyBooking } = require("./method/mobile_truf");
-const { mobileGettruf, mobileBookTruf } = require("./method/mobile_truf");
+const { mobileGetTrufs, mobileGettruf } = require("./method/mobile_truf");
 const { mobileGetSlot } = require("./method/mobile_slot");
 const { mobileGetPropfile, mobileGetNoti } = require("./method/mobile_profile");
 const { mobileUpdtaeProfilePic } = require("./method/mobile_profile");
@@ -62,6 +61,7 @@ const {
 const { adminGetHome } = require("./method/admin_home");
 const { ctakerAddEvent } = require("./method/ctaker_event");
 const { adminGetNoti } = require("./method/admin_noti");
+const { mobileBookTruf, mobileVerifyBooking } = require("./method/mobile_booking");
 
 app.use("/asset", express.static("public_asset"));
 app.get("/", empty);
