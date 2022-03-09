@@ -87,12 +87,7 @@ exports.mobileBookTruf = async (req, res) => {
     status: "Booked",
   };
   var _id;
-  if (body.ac_type !== "bank") {
-    console.log(body);
-    var msg = "Wallet and Credit booking is not avalible for this.";
-    res.status(502).send({ msg });
-    return;
-  }
+
   try {
     _id = ObjectId(body.slot_id);
   } catch (error) {
@@ -100,6 +95,7 @@ exports.mobileBookTruf = async (req, res) => {
     return;
   }
   var slot = {};
+  var booking_user = {};
   var error = false;
   await getTable("slots", { _id })
     .then((data) => {
@@ -112,26 +108,53 @@ exports.mobileBookTruf = async (req, res) => {
 
   if (error) return;
 
+  if (body.ac_type !== "bank") {
+    try {
+      _id = ObjectId(body.user_id);
+    } catch (error) {
+      res.status(502).send({ msg: "Database Error 1" });
+      return;
+    }
+    await getFtable(
+      "users",
+      { _id },
+      { project: { credit: 1, wallet: 1, bookings: 1 } }
+    )
+      .then((user) => {
+        booking_user = user;
+        if (user[body.ac_type] < slot.price) {
+          var msg = "Sorry you don't have enough credit or wallet amount.";
+          res.status(502).send({ msg });
+          error = true;
+        }
+      })
+      .catch(() => {
+        var msg = "Error on getting user datas.";
+        res.status(502).send({ msg });
+        error = true;
+      });
+  }
+
+  if (error) return;
+
   await getTable("bookings", { slot_id: body.slot_id, date: body.date })
     .then((data) => {
       if (data === null) {
         if (body.type === "s") {
           booking.authers = [body.user_id];
           booking.ctaker = slot.ctaker;
-          postTable("bookings", booking)
-            .then((booked) => {
-              res.send({ msg: "Succesfully Booked" });
-              setUserBookingHistory(body, booked.insertedId);
-            })
-            .catch(() => res.status(502).send({ msg: "Database Error 3" }));
-        } else {
-          postTable("bookings", booking)
-            .then((booked) => {
-              res.send({ msg: "Succesfully Booked" });
-              setUserBookingHistory(body, booked.insertedId);
-            })
-            .catch(() => res.status(502).send({ msg: "Database Error 4" }));
         }
+        postTable("bookings", booking)
+          .then((booked) => {
+            res.send({ msg: "Succesfully Booked" });
+            setUserBookingHistory(
+              booking_user,
+              booked.insertedId,
+              body.ac_type,
+              slot.price
+            );
+          })
+          .catch(() => res.status(502).send({ msg: "Database Error 3" }));
       } else {
         if (data.type !== body.type)
           res.status(400).send({ msg: "Wrong Input" });
@@ -169,7 +192,12 @@ exports.mobileBookTruf = async (req, res) => {
                   ended: false,
                 }).catch((e) => console.log(e));
               }
-              setUserBookingHistory(body, data._id);
+              setUserBookingHistory(
+                booking_user,
+                data._id,
+                body.ac_type,
+                slot.price
+              );
             })
             .catch(() => res.status(502).send({ msg: "Database Error 5" }));
         } else res.status(400).send({ msg: "Slot is Allready Booked" });
@@ -181,18 +209,15 @@ exports.mobileBookTruf = async (req, res) => {
     });
 };
 
-function setUserBookingHistory(body, booking_id) {
-  try {
-    var _id = ObjectId(body.user_id);
-    getFtable("users", { _id }, { project: { bookings: 1 } })
-      .then((user) => {
-        console.log(user);
-        var bookings = user.bookings ?? [];
-        bookings.unshift(booking_id);
-        putTable("users", { _id }, { $set: { bookings } });
-      })
-      .catch((e) => console.log(e));
-  } catch (error) {
-    return;
+function setUserBookingHistory(user, booking_id, ac_type, price) {
+  var bookings = user.bookings ?? [];
+  bookings.unshift(booking_id);
+  var update_set = { bookings };
+  if (ac_type != "bank") {
+    if (ac_type == "wallet") update_set.wallet = user.wallet - price;
+    if (ac_type == "credit") update_set.credit = user.credit - price;
   }
+  putTable("users", { _id: user._id }, { $set: update_set })
+    .then((user) => {})
+    .catch((e) => console.log(e));
 }
