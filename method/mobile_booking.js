@@ -30,7 +30,13 @@ exports.mobileVerifyBooking = async (req, res) => {
         if (body.type === "s") res.send({ msg: "Succesfully verified" });
       } else {
         if (data.type !== body.type) {
-          res.status(400).send({ msg: "Wrong Input" });
+          getTable("users", { _id })
+            .then((user) => {
+              if (user != null)
+                res.send({ wallet: user.wallet, credit: user.credit });
+              else res.status(502).send({ msg: "User not fount" });
+            })
+            .catch(() => res.status(502).send({ msg: "Database Error 2" }));
         } else {
           if (body.type === "s") {
             const authers = data.authers;
