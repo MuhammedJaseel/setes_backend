@@ -1,8 +1,7 @@
 const { ObjectId } = require("mongodb");
-const { getTables } = require("./database");
+const { getTables, putTable } = require("./database");
 
 exports.mobileAuth = function (req, res, next) {
-  console.log(req.headers);
   var _id;
   try {
     _id = ObjectId(req.headers.user_id);
@@ -12,8 +11,11 @@ exports.mobileAuth = function (req, res, next) {
   }
   getTables("users", { filter: { _id }, project: { key: 1 } })
     .then((user) => {
-      if (user[0].key === req.headers.key) next();
-      else res.status(401).send({ msg: "fUnauthorized" });
+      if (user[0].key === req.headers.key) {
+        next();
+        if (req.headers.gps != null)
+          putTable("users", { _id }, { $set: { lase_gps: req.headers.gps } });
+      } else res.status(401).send({ msg: "fUnauthorized" });
     })
     .catch(() => res.status(502).send({ msg: "Database Error" }));
 };
