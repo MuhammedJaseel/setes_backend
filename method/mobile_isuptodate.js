@@ -6,6 +6,8 @@ exports.mobileIsuptodate = async (req, res) => {
   const logged = req.body.logged;
   const key = req.body.key;
   var _id;
+  console.log(_id);
+  console.log(req.body);
   try {
     if (logged) _id = ObjectId(req.query.user_id);
   } catch (e) {
