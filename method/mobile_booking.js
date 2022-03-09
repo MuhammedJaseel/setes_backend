@@ -27,7 +27,13 @@ exports.mobileVerifyBooking = async (req, res) => {
   await getTable("bookings", { slot_id: body.slot_id, date: body.date })
     .then((data) => {
       if (data === null) {
-        if (body.type === "s") res.send({ msg: "Succesfully verified" });
+        getTable("users", { _id })
+          .then((user) => {
+            if (user != null)
+              res.send({ wallet: user.wallet, credit: user.credit });
+            else res.status(502).send({ msg: "User not fount" });
+          })
+          .catch(() => res.status(502).send({ msg: "Database Error 2" }));
       } else {
         if (data.type !== body.type) {
           getTable("users", { _id })
