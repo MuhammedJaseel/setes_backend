@@ -115,11 +115,7 @@ exports.mobileBookTruf = async (req, res) => {
       res.status(502).send({ msg: "Database Error 1" });
       return;
     }
-    await getFtable(
-      "users",
-      { _id },
-      { project: { credit: 1, wallet: 1, bookings: 1 } }
-    )
+    await getFtable("users", { _id })
       .then((user) => {
         booking_user = user;
         if (user[body.ac_type] < slot.price) {
