@@ -1,4 +1,5 @@
 exports.mobileAuth = function (req, res, next) {
+  console.log(req.headers);
   next();
 };
 
