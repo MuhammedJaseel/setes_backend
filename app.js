@@ -61,7 +61,10 @@ const {
 const { adminGetHome } = require("./method/admin_home");
 const { ctakerAddEvent } = require("./method/ctaker_event");
 const { adminGetNoti } = require("./method/admin_noti");
-const { mobileBookTruf, mobileVerifyBooking } = require("./method/mobile_booking");
+const {
+  mobileBookTruf,
+  mobileVerifyBooking,
+} = require("./method/mobile_booking");
 
 app.use("/asset", express.static("public_asset"));
 app.get("/", empty);
@@ -70,7 +73,7 @@ app.post("/mobile/isuptodate", mobileIsuptodate);
 app.post("/mobile/sendotp", mobileSendotp);
 app.post("/mobile/login", mobileLogin);
 app.post("/mobile/guestlogin", mobileEnterasGust);
-app.post("/mobile/register", mobileAuth, mobileRegister);
+app.post("/mobile/register", mobileRegister);
 app.get("/mobile/home", mobileAuth, mobileGethome);
 app.get("/mobile/seteshome", mobileAuth, mobileGetseteshome);
 app.get("/mobile/scorebords", mobileAuth, mobileScorebord);
