@@ -1,4 +1,4 @@
-const { getTables } = require("../module/database");
+const { getTables, putTable } = require("../module/database");
 
 exports.adminLogin = (req, res) => {
   var key = Math.random().toString();
@@ -10,7 +10,7 @@ exports.adminLogin = (req, res) => {
       if (data.length == 0) res.status(400).send({ msg: "Wrong Input" });
       else {
         putTable("admins", { _id: data._id }, { $set: { key } })
-          .then((data_2) => {
+          .then(() => {
             data.key = key;
             res.send(data);
           })
