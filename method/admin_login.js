@@ -9,10 +9,10 @@ exports.adminLogin = (req, res) => {
     .then((data) => {
       if (data.length == 0) res.status(400).send({ msg: "Wrong Input" });
       else {
-        putTable("admins", { _id: data._id }, { $set: { key } })
+        putTable("admins", { _id: data[0]._id }, { $set: { key } })
           .then(() => {
             data.key = key;
-            res.send(data);
+            res.send(data[0]);
           })
           .catch((e) => res.status(502).send({ msg: "Database Error" }));
       }
