@@ -20,8 +20,6 @@ exports.mobileRegister = async (req, res) => {
       credit: 0,
       wallet: 0,
       bookings: [],
-      lat: "9090",
-      log: "78787",
       blocked: false,
       created: new Date(),
       updated: new Date(),

@@ -109,8 +109,6 @@ exports.mobileEnterasGust = async (req, res) => {
         key,
         credit: 0,
         wallet: 0,
-        lat: "9090",
-        log: "78787",
         bookings: [],
         blocked: false,
         created: new Date(),
