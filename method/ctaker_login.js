@@ -12,8 +12,8 @@ exports.ctakerLogin = (req, res) => {
             ctaker.key = key;
             res.send(ctaker);
           })
-          .catch((e) => res.status(502).send({ msg: "Database Error" }));
+          .catch((e) => res.status(502).send({ msg: "Database Error 1" }));
       }
     })
-    .catch(() => res.status(502).send({ msg: "Database Error" }));
+    .catch(() => res.status(502).send({ msg: "Database Error 2" }));
 };
