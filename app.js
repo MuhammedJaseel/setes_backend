@@ -126,7 +126,7 @@ app.delete("/admin/ctaker", adminAuth, adminDeleteCtaker);
 app.get("/admin/assets", adminAuth, adminGetassets);
 app.put("/admin/assets", adminAuth, adminPutassets);
 
-app.post("/ctaker/login", ctakerAuth, ctakerLogin);
+app.post("/ctaker/login",  ctakerLogin);
 app.get("/ctaker/profile", ctakerAuth, ctakerGetProfile);
 app.get("/ctaker/matchs", ctakerAuth, ctakerGetMatchs);
 app.get("/ctaker/allmatchs", ctakerAuth, ctakerGetAllMatchs);
