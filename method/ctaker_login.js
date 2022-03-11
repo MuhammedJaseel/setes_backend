@@ -7,7 +7,7 @@ exports.ctakerLogin = (req, res) => {
       if (ctaker === null) res.status(401).send({ msg: "Wrong credential" });
       else {
         delete ctaker.password;
-        putTable("admins", { _id: data[0]._id }, { $set: { key } })
+        putTable("ctakers", { _id: ctaker._id }, { $set: { key } })
           .then(() => {
             ctaker.key = key;
             res.send(ctaker);
