@@ -1,4 +1,4 @@
-const { getTable } = require("../module/database");
+const { getTable, putTable } = require("../module/database");
 
 exports.ctakerLogin = (req, res) => {
   var key = Math.random().toString();
