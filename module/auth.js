@@ -48,6 +48,27 @@ exports.adminAuth = function (req, res, next) {
 };
 
 exports.ctakerAuth = function (req, res, next) {
-  console.log(req.headers);
-  next();
+  var _id;
+  try {
+    _id = ObjectId(req.headers.user_id);
+  } catch (e) {
+    res.status(502).send({ msg: "Database Error" });
+    return;
+  }
+  getTables("ctakers", { filter: { _id }, project: { key: 1 } })
+    .then((ctaker) => {
+      if (ctaker.length === 0) res.status(502).send({ msg: "Database Error" });
+      else {
+        if (ctaker[0].key === req.headers.key) {
+          next();
+          if (req.headers.gps != null)
+            putTable(
+              "ctakers",
+              { _id },
+              { $set: { lase_gps: req.headers.gps } }
+            );
+        } else res.status(401).send({ msg: "Unauthorized" });
+      }
+    })
+    .catch(() => res.status(502).send({ msg: "Database Error" }));  
 };
