@@ -93,7 +93,7 @@ app.get("/mobile/primedetails", mobileAuth, mobileGetPrimedetails);
 app.get("/mobile/primetrufs", mobileAuth, mobileGetPrimetrufs);
 app.get("/mobile/hometruf", mobileAuth, mobileHomeTruf);
 
-app.get("/admin/login", adminLogin);
+app.post("/admin/login", adminLogin);
 app.get("/admin/home", adminAuth, adminGetHome);
 app.get("/admin/notis", adminAuth, adminGetNoti);
 app.get("/admin/members", adminAuth, adminGetMemebers);
