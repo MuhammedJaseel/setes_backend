@@ -11,7 +11,7 @@ exports.adminLogin = (req, res) => {
       else {
         putTable("admins", { _id: data[0]._id }, { $set: { key } })
           .then(() => {
-            data.key = key;
+            data[0].key = key;
             res.send(data[0]);
           })
           .catch((e) => res.status(502).send({ msg: "Database Error" }));
