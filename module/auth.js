@@ -31,7 +31,8 @@ exports.adminAuth = function (req, res, next) {
   }
   getTables("admins", { filter: { _id }, project: { key: 1 } })
     .then((admin) => {
-      if (admin.length == 0) res.status(502).send({ msg: "Database Error" });
+      console.log(admin);
+      if (admin.length === 0) res.status(502).send({ msg: "Database Error" });
       else if (admin[0].key === req.headers.key) {
         next();
         if (req.headers.gps != null)
