@@ -3,14 +3,12 @@ const app = express();
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const WebSocket = require("ws");
-var https = require("https");
-var fs = require("fs");
+const https = require("https");
+const fs = require("fs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(fileUpload());
-
-const { empty } = require("./module/empty");
 
 const { mobileIsuptodate } = require("./method/mobile_isuptodate");
 const { mobileAuth, adminAuth, ctakerAuth } = require("./module/auth");
@@ -28,6 +26,9 @@ const { mobilePutProfile } = require("./method/mobile_profile");
 const { mobileGetBookings } = require("./method/mobile_profile");
 const { mobileToPrime, mobileGetPrimetrufs } = require("./method/mobile_prime");
 const { mobileGetPrimedetails } = require("./method/mobile_prime");
+const { mobileBookTruf } = require("./method/mobile_booking");
+const { mobileVerifyBooking } = require("./method/mobile_booking");
+const { mobileHomeTruf } = require("./method/mobile_hometruf");
 
 const { adminGetMemebers } = require("./method/admin_member");
 const { adminGetEvent, adminGetEvents } = require("./method/admin_event");
@@ -47,28 +48,24 @@ const { adminGetCtakers, adminPostCtaker } = require("./method/admin_ctaker");
 const { adminPutCtaker, adminGetCtaker } = require("./method/admin_ctaker");
 const { adminDeleteCtaker } = require("./method/admin_ctaker");
 const { adminGetassets, adminPutassets } = require("./method/admin_asset");
+const { adminGetHome } = require("./method/admin_home");
+const { adminGetNoti } = require("./method/admin_noti");
+const { adminLogin } = require("./method/admin_login");
 
 const { ctakerLogin } = require("./method/ctaker_login");
 const { ctakerGetProfile } = require("./method/ctaker_profile");
 const { ctakerGetMatchs, ctakerGetMatch } = require("./method/ctaket_match");
 const { ctakerGetAllMatchs } = require("./method/ctaket_match");
 const { ctakerPutslot } = require("./method/ctaket_match");
-const { mobileHomeTruf } = require("./method/mobile_hometruf");
-const {
-  connectWebSocket,
-  getAllConnectedSocket,
-} = require("./module/web_socket");
-const { adminGetHome } = require("./method/admin_home");
 const { ctakerAddEvent } = require("./method/ctaker_event");
-const { adminGetNoti } = require("./method/admin_noti");
-const {
-  mobileBookTruf,
-  mobileVerifyBooking,
-} = require("./method/mobile_booking");
-const { adminLogin } = require("./method/admin_login");
 
-app.use("/asset", express.static("public_asset"));
+const { connectWebSocket } = require("./module/web_socket");
+const { getAllConnectedSocket } = require("./module/web_socket");
+
+const { empty } = require("./module/empty");
+
 app.get("/", empty);
+app.use("/asset", express.static("public_asset"));
 
 app.post("/mobile/isuptodate", mobileIsuptodate);
 app.post("/mobile/sendotp", mobileSendotp);
@@ -126,7 +123,7 @@ app.delete("/admin/ctaker", adminAuth, adminDeleteCtaker);
 app.get("/admin/assets", adminAuth, adminGetassets);
 app.put("/admin/assets", adminAuth, adminPutassets);
 
-app.post("/ctaker/login",  ctakerLogin);
+app.post("/ctaker/login", ctakerLogin);
 app.get("/ctaker/profile", ctakerAuth, ctakerGetProfile);
 app.get("/ctaker/matchs", ctakerAuth, ctakerGetMatchs);
 app.get("/ctaker/allmatchs", ctakerAuth, ctakerGetAllMatchs);
@@ -135,26 +132,11 @@ app.put("/ctaker/booking", ctakerAuth, ctakerPutslot);
 app.post("/ctaker/matchevent", ctakerAuth, ctakerAddEvent);
 
 app.get("/conn", getAllConnectedSocket);
-
 app.get("*", (req, res) => res.send("Hello World!"));
-var port = 8000;
-// const server = app.listen(port, () => console.log("Started on " + port));
-const server = https
-  .createServer(
-    {
-      key: fs.readFileSync("server.key"),
-      cert: fs.readFileSync("server.cert"),
-    },
-    app
-  )
-  .listen(port, () => console.log("https://localhost:" + port));
+
+const key = fs.readFileSync("server.key");
+const cert = fs.readFileSync("server.cert");
+const server = https.createServer({ key, cert }, app).listen(8000);
+
 const wss = new WebSocket.Server({ server });
 connectWebSocket(wss);
-
-// git add .
-// git commit -m "seconds Commit"
-// git push origin main
-
-// git push heroku master
-// git init
-// heroku git:remote -a apisetes

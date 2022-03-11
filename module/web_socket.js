@@ -2,21 +2,36 @@ var wss;
 exports.connectWebSocket = (_wss) => {
   wss = _wss;
   wss.on("connection", (ws, req) => {
-    const path = (ws.conn_id = req.url.split("/"));
-
-    ws.conn_type = "mobile";
-    ws.conn_id = path[2];
-
+    if (!validateUser(req.headers)) ws.close();
+    else {
+      ws.who = req.headers.who;
+      ws.id = req.headers.user_id;
+    }
     ws.on("close", function (reasonCode, description) {
-      if (ws.admin === true) console.log("Admin Web Scocket Disconected");
-      else console.log(" disconnected");
+      // console.log("One WS Disconnected");
     });
   });
 };
 
 exports.getAllConnectedSocket = (req, res) => {
+  var response = [];
   wss.clients.forEach(function (client) {
-    if (client.conn_type === "ctaker") client.send(client.conn_type);
+    response.push({ id: client.id, who: client.who });
   });
-  res.send("wsws");
+  res.send(response);
+  // sendSocketMsg("users", "hallow", false, "vxcvcxv");
+};
+
+const validateUser = (data) => {
+  // const who = "\nType:" + data.who;
+  // const id = "\nID:" + data.user_id;
+  // const key = "\nKey:" + data.key;
+  // console.log("\nOne WS Connection" + who + id + key);
+  return true;
+};
+
+exports.sendSocketMsg = (who, msg, all, id) => {
+  wss.clients.forEach(function (client) {
+    if (client.who == who) if (all || client.id == id) client.send(msg);
+  });
 };

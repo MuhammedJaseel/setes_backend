@@ -1,4 +1,5 @@
 const { putTable, countTable } = require("../module/database");
+const { sendSocketMsg } = require("../module/web_socket");
 var ObjectId = require("mongodb").ObjectId;
 
 exports.mobileRegister = async (req, res) => {
@@ -32,6 +33,7 @@ exports.mobileRegister = async (req, res) => {
     .then((data) => {
       body._id = _id;
       res.send(body);
+      sendSocketMsg("admins", "noti|users", true, "");
     })
     .catch((err) => res.status(502).send({ msg: "Database Error" }));
 };
