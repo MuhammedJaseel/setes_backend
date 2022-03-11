@@ -33,6 +33,8 @@ exports.adminAuth = function (req, res, next) {
     .then((admin) => {
       if (admin.length === 0) res.status(502).send({ msg: "Database Error" });
       else {
+        console.log(admin[0].key);
+        console.log(req.headers.key);
         if (admin[0].key === req.headers.key) {
           next();
           if (req.headers.gps != null)
