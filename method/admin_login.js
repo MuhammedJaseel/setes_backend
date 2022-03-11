@@ -1,6 +1,7 @@
 const { getTables } = require("../module/database");
 
 exports.adminLogin = (req, res) => {
+  console.log(req.body);
   getTables("admins", {
     filter: { user_name: req.body.user_name, password: req.body.password },
     project: { password: 0 },
