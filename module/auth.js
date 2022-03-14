@@ -11,7 +11,8 @@ exports.mobileAuth = function (req, res, next) {
   }
   getTables("users", { filter: { _id }, project: { key: 1 } })
     .then((user) => {
-      if (user.length == 0) res.status(502).send({ msg: "Database Error" });
+      if (user.length == 0)
+        res.status(401).send({ msg: "Unauthorized :Errro User not found" });
       else if (user[0].key === req.headers.key) {
         next();
         if (req.headers.gps != null)
@@ -31,7 +32,8 @@ exports.adminAuth = function (req, res, next) {
   }
   getTables("admins", { filter: { _id }, project: { key: 1 } })
     .then((admin) => {
-      if (admin.length === 0) res.status(502).send({ msg: "Database Error" });
+      if (admin.length === 0)
+        res.status(401).send({ msg: "Unauthorized :Errro User not found" });
       else {
         if (admin[0].key === req.headers.key) {
           next();
@@ -57,7 +59,8 @@ exports.ctakerAuth = function (req, res, next) {
   }
   getTables("ctakers", { filter: { _id }, project: { key: 1 } })
     .then((ctaker) => {
-      if (ctaker.length === 0) res.status(502).send({ msg: "Database Error" });
+      if (ctaker.length === 0)
+        res.status(401).send({ msg: "Unauthorized :Errro User not found" });
       else {
         if (ctaker[0].key === req.headers.key) {
           next();
