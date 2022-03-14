@@ -2,6 +2,7 @@ const { getTable, putTable } = require("../module/database");
 
 exports.ctakerLogin = (req, res) => {
   var key = Math.random().toString();
+  console.log(req.body);
   getTable("ctakers", req.body)
     .then((ctaker) => {
       if (ctaker === null) res.status(401).send({ msg: "Wrong credential" });
