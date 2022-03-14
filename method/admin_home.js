@@ -202,7 +202,7 @@ exports.adminGetHome = async function (req, res) {
       error = true;
     });
   if (error) return;
-  await getTables("admin_noti", { filter: { seen: true } })
+  await getTables("admin_noti")
     .then((data) => (homedata.notis.all = data))
     .catch(() => {
       res.status(502).send({ msg: "Error: OBJECTID ERR:notifications" });
@@ -216,7 +216,7 @@ exports.adminGetHome = async function (req, res) {
     res.status(502).send({ msg: "Error: OBJECTID ERR:assets" });
     error = true;
   } else homedata.assets = assets.body;
-  
+
   if (error) return;
 
   res.send(homedata);
