@@ -21,7 +21,7 @@ exports.adminGetNoti = async (req, res) => {
   res.send(notis);
 };
 
-exports.adminAddNoti = async (title, desc) => {
+exports.adminAddNoti = async (title, desc, type) => {
   var body = {
     title,
     desc,
