@@ -17,7 +17,7 @@ exports.connectWebSocket = (_wss) => {
 exports.getAllConnectedSocket = (req, res) => {
   var response = [];
   wss.clients.forEach(function (client) {
-    client.send("hallow");
+    client.send("noti|");
     response.push({ id: client.id, who: client.who });
   });
   res.send(response);
