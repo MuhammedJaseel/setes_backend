@@ -4,8 +4,9 @@ exports.connectWebSocket = (_wss) => {
   wss.on("connection", (ws, req) => {
     if (!validateUser(req.query)) ws.close();
     else {
-      ws.who = req.query.who;
-      ws.id = req.query.user_id;
+      console.log(req.query);
+      ws.who = req.query.who??'';
+      ws.id = req.query.user_id??'';
     }
     ws.on("close", function (reasonCode, description) {
       // console.log("One WS Disconnected");
