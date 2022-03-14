@@ -11,7 +11,11 @@ MongoClient.connect(mdUrl, function (err, client) {
 });
 
 exports.getTable = function (table, filter) {
-  return db.collection(table).findOne(filter);
+  try {
+    return db.collection(table).findOne(filter);
+  } catch (error) {
+    return Promise.reject();
+  }
 };
 
 exports.getTables = function (table, props) {
