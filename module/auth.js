@@ -6,7 +6,7 @@ exports.mobileAuth = function (req, res, next) {
   try {
     _id = ObjectId(req.headers.user_id);
   } catch (e) {
-    res.status(502).send({ msg: "Database Error" });
+    res.status(401).send({ msg: "Unauthorized :Errro ID Error" });
     return;
   }
   getTables("users", { filter: { _id }, project: { key: 1 } })
@@ -26,7 +26,7 @@ exports.adminAuth = function (req, res, next) {
   try {
     _id = ObjectId(req.headers.user_id);
   } catch (e) {
-    res.status(502).send({ msg: "Database Error" });
+    res.status(401).send({ msg: "Unauthorized :Errro ID Error" });
     return;
   }
   getTables("admins", { filter: { _id }, project: { key: 1 } })
@@ -52,7 +52,7 @@ exports.ctakerAuth = function (req, res, next) {
   try {
     _id = ObjectId(req.headers.user_id);
   } catch (e) {
-    res.status(502).send({ msg: "Database Error" });
+    res.status(401).send({ msg: "Unauthorized :Errro ID Error" });
     return;
   }
   getTables("ctakers", { filter: { _id }, project: { key: 1 } })
@@ -70,5 +70,5 @@ exports.ctakerAuth = function (req, res, next) {
         } else res.status(401).send({ msg: "Unauthorized" });
       }
     })
-    .catch(() => res.status(502).send({ msg: "Database Error" }));  
+    .catch(() => res.status(502).send({ msg: "Database Error" }));
 };
