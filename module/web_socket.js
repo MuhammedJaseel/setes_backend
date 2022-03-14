@@ -5,7 +5,6 @@ exports.connectWebSocket = (_wss) => {
     var user = req.url.split("/");
     if (!validateUser(user)) ws.close();
     else {
-      console.log(user);
       ws.who = user[1];
       ws.id = user[2];
     }
