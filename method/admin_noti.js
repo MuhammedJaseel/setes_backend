@@ -3,6 +3,7 @@ const { sendSocketMsg } = require("../module/web_socket");
 
 exports.adminGetNoti = async (req, res) => {
   var notis = {};
+  var error = false;
   await getTables("admin_noti", { filter: { seen: false } })
     .then((data) => (notis = { new: data, all: [] }))
     .catch(() => {
