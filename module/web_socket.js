@@ -2,11 +2,11 @@ var wss;
 exports.connectWebSocket = (_wss) => {
   wss = _wss;
   wss.on("connection", (ws, req) => {
-    if (!validateUser(req.query)) ws.close();
+    if (!validateUser(req.headers)) ws.close();
     else {
-      console.log(req.query);
-      ws.who = req.query.who??'';
-      ws.id = req.query.user_id??'';
+      console.log(req.headers);
+      ws.who = req.headers.who??'';
+      ws.id = req.headers.user_id??'';
     }
     ws.on("close", function (reasonCode, description) {
       // console.log("One WS Disconnected");
