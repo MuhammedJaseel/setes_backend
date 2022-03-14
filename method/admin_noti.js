@@ -30,5 +30,5 @@ exports.adminAddNoti = async (title, desc, type) => {
     seen: false,
   };
   await postTable("admin_noti", body);
-  sendSocketMsg("admin", "noti|bookings|", true, "");
+  sendSocketMsg("admins", "noti|bookings|", true, "");
 };
