@@ -1,5 +1,6 @@
 const { postTable, putTable, getTable } = require("../module/database");
 const { adminAddNoti } = require("./admin_noti");
+const { ctakerAddNoti } = require("./ctaker_noti");
 var ObjectId = require("mongodb").ObjectId;
 
 exports.mobileVerifyBooking = async (req, res) => {
@@ -158,14 +159,17 @@ exports.mobileBookTruf = async (req, res) => {
         postTable("bookings", booking)
           .then((booked) => {
             res.send({ msg: "Succesfully Booked" });
-            var desc = `New Booking to truf ${slot.truf_name} (${slot.truf_id})`;
             setUserBookingHistory(
               booking_user,
               booked.insertedId,
               body.ac_type,
               slot.price
             );
+            var desc = `New Booking to truf ${slot.truf_name} (${slot.truf_id})`;
             adminAddNoti("New Booking", desc, "Setes Booking");
+            desc = `New Booking to truf ${slot.truf_name} (${slot.truf_id})`;
+            if (body.type === "s")
+              ctakerAddNoti(slot.ctaker, "New match added", desc, "New Match");
           })
           .catch(() => res.status(502).send({ msg: "Database Error 3" }));
       } else {
@@ -213,6 +217,13 @@ exports.mobileBookTruf = async (req, res) => {
               );
               var desc = `New Booking to truf ${slot.truf_name} (${slot.truf_id})`;
               adminAddNoti("New Booking", desc, "Setes Booking");
+              desc = `New Booking to truf ${slot.truf_name} (${slot.truf_id})`;
+              ctakerAddNoti(
+                slot.ctaker,
+                "One more player is added",
+                desc,
+                "New Player"
+              );
             })
             .catch(() => res.status(502).send({ msg: "Database Error 5" }));
         } else res.status(400).send({ msg: "Slot is Allready Booked" });

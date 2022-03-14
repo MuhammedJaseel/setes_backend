@@ -20,14 +20,18 @@ exports.getTables = function (table, props) {
   const skip = props.skip ?? 0;
   const sort = props.sort ?? { _id: -1 };
   const project = props.project ?? {};
-  return db
-    .collection(table)
-    .find(filter)
-    .project(project)
-    .sort(sort)
-    .limit(limit)
-    .skip(skip)
-    .toArray();
+  try {
+    return db
+      .collection(table)
+      .find(filter)
+      .project(project)
+      .sort(sort)
+      .limit(limit)
+      .skip(skip)
+      .toArray();
+  } catch (error) {
+    return Promise.reject();
+  }
 };
 
 exports.getnolimitTables = function (table, props) {
@@ -35,27 +39,47 @@ exports.getnolimitTables = function (table, props) {
   const skip = props.skip ?? 0;
   const sort = props.sort ?? { _id: -1 };
   const project = props.project ?? {};
-  return db
-    .collection(table)
-    .find(filter)
-    .project(project)
-    .sort(sort)
-    .skip(skip)
-    .toArray();
+  try {
+    return db
+      .collection(table)
+      .find(filter)
+      .project(project)
+      .sort(sort)
+      .skip(skip)
+      .toArray();
+  } catch (error) {
+    return Promise.reject();
+  }
 };
 
 exports.postTable = function (table, body) {
-  return db.collection(table).insertOne(body);
+  try {
+    return db.collection(table).insertOne(body);
+  } catch (error) {
+    return Promise.reject();
+  }
 };
 
 exports.putTable = function (table, filter, body) {
-  return db.collection(table).updateOne(filter, body);
+  try {
+    return db.collection(table).updateOne(filter, body);
+  } catch (error) {
+    return Promise.reject();
+  }
 };
 
 exports.deleteTable = function (table, filter) {
-  return db.collection(table).deleteOne(filter);
+  try {
+    return db.collection(table).deleteOne(filter);
+  } catch (error) {
+    return Promise.reject();
+  }
 };
 
 exports.countTable = function (table, filter) {
-  return db.collection(table).find(filter).count();
+  try {
+    return db.collection(table).find(filter).count();
+  } catch (error) {
+    return Promise.reject();
+  }
 };

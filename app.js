@@ -63,6 +63,7 @@ const { connectWebSocket } = require("./module/web_socket");
 const { getAllConnectedSocket } = require("./module/web_socket");
 
 const { empty } = require("./module/empty");
+const { getTable, getTables } = require("./module/database");
 
 app.get("/", empty);
 app.use("/asset", express.static("public_asset"));
