@@ -1,4 +1,6 @@
 const { postTable, putTable, getTable } = require("../module/database");
+const { sendSocketMsg } = require("../module/web_socket");
+const { adminAddNoti } = require("./admin_noti");
 var ObjectId = require("mongodb").ObjectId;
 
 exports.mobileVerifyBooking = async (req, res) => {
@@ -157,6 +159,8 @@ exports.mobileBookTruf = async (req, res) => {
         postTable("bookings", booking)
           .then((booked) => {
             res.send({ msg: "Succesfully Booked" });
+            var desc = `New Booking to truf ${slot.truf_name} (${slot.truf_id})`;
+            adminAddNoti("New Booking", desc, "Setes Booking");
             setUserBookingHistory(
               booking_user,
               booked.insertedId,

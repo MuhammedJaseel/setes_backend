@@ -26,14 +26,14 @@ exports.mobileRegister = async (req, res) => {
       updated: new Date(),
     };
   } catch (error) {
-    res.status(502).send({ msg: "Database Error" });
+    res.status(502).send({ msg: "Error : (Not a valid id)" });
     return;
   }
   putTable("users", { _id }, { $set: body })
-    .then((data) => {
+    .then(() => {
       body._id = _id;
       res.send(body);
       sendSocketMsg("admins", "noti|users", true, "");
     })
-    .catch((err) => res.status(502).send({ msg: "Database Error" }));
+    .catch(() => res.status(502).send({ msg: "Database Error" }));
 };
