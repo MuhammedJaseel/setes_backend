@@ -11,7 +11,7 @@ exports.adminGetNoti = async (req, res) => {
       error = true;
     });
   if (error) return;
-  await getTables("admin_noti")
+  await getTables("admin_noti", {})
     .then((data) => (notis.all = data))
     .catch(() => {
       res.status(502).send({ msg: "Error: OBJECTID ERR:notifications" });
