@@ -4,6 +4,7 @@ const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const WebSocket = require("ws");
 const https = require("https");
+const http = require("http");
 const fs = require("fs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -142,6 +143,7 @@ app.get("*", (req, res) => res.send("Hello World!"));
 const key = fs.readFileSync("server.key");
 const cert = fs.readFileSync("server.cert");
 const server = https.createServer({ key, cert }, app).listen(8000);
+const server_test = http.createServer(app).listen(8001);
 
 const wss = new WebSocket.Server({ server });
 connectWebSocket(wss);
