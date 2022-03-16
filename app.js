@@ -143,7 +143,7 @@ app.get("*", (req, res) => res.send("Hello World!"));
 const key = fs.readFileSync("server.key");
 const cert = fs.readFileSync("server.cert");
 const server = https.createServer({ key, cert }, app).listen(8000);
-const server_test = http.createServer(app).listen(8001);
+http.createServer(app).listen(8001);
 
 const wss = new WebSocket.Server({ server });
 connectWebSocket(wss);
