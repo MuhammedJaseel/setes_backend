@@ -38,13 +38,13 @@ exports.mobileGetSlot = function (req, res) {
               project: { id: 1, name: 1, img: 1 },
             })
               .then((users) => (data.authers = users))
-              .catch((err) => (error = "Some of the booked user not found"));
+              .catch(() => (error = "Some of the booked user not found"));
             await getTables("users_guest", {
               filter: { _id: { $in: authers_guest } },
               project: { id: 1, name: 1, img: 1 },
             })
               .then((users) => (data.authers = data.authers.concat(users)))
-              .catch((err) => (error = "Some of the booked user not found"));
+              .catch(() => (error = "Some of the booked user not found"));
 
             if (error === null) {
               data.booking = booking;
@@ -52,7 +52,7 @@ exports.mobileGetSlot = function (req, res) {
             } else res.status(502).send({ msg: error });
           }
         })
-        .catch((err) => res.status(502).send({ msg: "Database Error" }));
+        .catch(() => res.status(502).send({ msg: "Database Error" }));
     })
-    .catch((err) => res.status(502).send({ msg: "Database Error" }));
+    .catch(() => res.status(502).send({ msg: "Database Error" }));
 };

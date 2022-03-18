@@ -238,7 +238,7 @@ exports.ctakerPutslot = async (req, res) => {
   try {
     _id = ObjectId(req.query.booking_id);
   } catch (e) {
-    res.status(502).send({ msg: "Database Error" });
+    res.status(502).send({ msg: "Not a valid ID" });
     return;
   }
 
@@ -269,11 +269,9 @@ exports.ctakerPutslot = async (req, res) => {
           booking.corners = { r: 0, b: 0 };
           booking.teams = body.teams;
           postTable("matchs_live", booking)
-            .then(() => {
-              deleteTable("bookings", { _id });
-            })
+            .then(() => deleteTable("bookings", { _id }))
             .catch(() => {
-              res.status(502).send({ msg: "Database Error" });
+              res.status(502).send({ msg: "Error on posting to live" });
               error = true;
             });
         }
