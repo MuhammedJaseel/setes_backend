@@ -43,7 +43,13 @@ exports.mobileGetSlot = function (req, res) {
               });
           }
         })
-        .catch((err) => res.status(502).send({ msg: "Database Error" }));
+        .catch((err) => {
+          console.log(err);
+          res.status(502).send({ msg: "Database Error" });
+        });
     })
-    .catch((err) => res.status(502).send({ msg: "Database Error" }));
+    .catch((err) => {
+      console.log(err);
+      res.status(502).send({ msg: "Database Error" });
+    });
 };
