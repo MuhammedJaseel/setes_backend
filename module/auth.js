@@ -9,8 +9,11 @@ exports.mobileAuth = function (req, res, next) {
     res.status(401).send({ msg: "Unauthorized :Errro ID Error" });
     return;
   }
-  const table = req.headers.type == "users_guest" ? "users_guest" : "users";
-  getTables(table, { filter: { _id }, project: { key: 1 } })
+
+  getTables(req.headers.type ?? "users", {
+    filter: { _id },
+    project: { key: 1 },
+  })
     .then((user) => {
       if (user.length == 0)
         res.status(401).send({ msg: "Unauthorized :Errro User not found" });

@@ -30,7 +30,7 @@ exports.mobileVerifyBooking = async (req, res) => {
 
   if (error) return;
 
-  await getTable("users", { _id: user_id })
+  await getTable(req.headers.type ?? "users", { _id: user_id })
     .then((user) => {
       if (user != null) booking_user = user;
       else {
