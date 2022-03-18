@@ -14,6 +14,7 @@ exports.ctakerGetMatch = async (req, res) => {
   }
   var error = null;
 
+  console.log(req.query);
   var table = "bookings";
   if (req.query.status === "Started") table = "matchs_live";
   if (req.query.status === "Fulltime") table = "matchs_fulltime";
