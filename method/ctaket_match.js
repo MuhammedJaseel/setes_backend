@@ -14,7 +14,12 @@ exports.ctakerGetMatch = async (req, res) => {
   }
   var error = null;
 
-  await getTable("bookings", { _id })
+  var table = "bookings";
+  if (req.query.status === "Started") table = "matchs_live";
+  if (req.query.status === "Fulltime") table = "matchs_fulltime";
+  if (req.query.status === "Cancelled") table = "matchs_cancellled";
+
+  await getTable(table, { _id })
     .then(async (booking) => {
       if (booking === null) {
         error = "Item not found";
