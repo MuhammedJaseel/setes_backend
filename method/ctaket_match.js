@@ -43,13 +43,14 @@ exports.ctakerGetMatch = async (req, res) => {
           var authers_guest = [];
           var authers = [];
 
-          console.log(booking.authers);
-
           for (let a = 0; a < booking.authers.length; a++) {
             if (booking.authers[a].type === "users_guest")
               authers_guest.push(ObjectId(booking.authers[a]._id));
             else authers.push(ObjectId(booking.authers[a]._id));
           }
+
+          console.log(authers_guest);
+          console.log(authers);
 
           await getTables("users_guest", {
             filter: { _id: { $in: authers_guest } },
