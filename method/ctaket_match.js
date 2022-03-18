@@ -64,7 +64,10 @@ exports.ctakerGetMatch = async (req, res) => {
             project,
           })
             .then((users) => (booking.authers = booking.auther.concat(users)))
-            .catch(() => (error = "Database Error2"));
+            .catch((e) => {
+              console.log(e);
+              error = "Database Error2";
+            });
 
           var _id = ObjectId(booking.slot_id);
           await getTable("slots", { _id })
