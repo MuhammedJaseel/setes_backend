@@ -21,10 +21,7 @@ exports.mobileGetTrufs = async (req, res) => {
   var trufs_active = [];
   var type = req.query.type;
   var date = req.query.date;
-  if (type !== "s" && type !== "t") {
-    res.status(400).send({ msg: "Wrong Input" });
-    return;
-  }
+
   await getTables("trufs", { sort: { _id: -1 }, limit: 30 })
     .then((data) => (trufs = data))
     .catch((err) => {
@@ -36,31 +33,24 @@ exports.mobileGetTrufs = async (req, res) => {
     return;
   }
   for (let i = 0; i < trufs.length; i++) {
-    await getTables("slots", {
-      filter: { truf__id: trufs[i]._id.toString(), type },
-    })
+    await getTables("slots", { filter: { truf__id: trufs[i]._id.toString() } })
       .then(async (slots) => {
         for (let j = 0; j < slots.length; j++) {
           var slot_id = slots[j]._id.toString();
           await getTables("bookings", { filter: { slot_id, date } })
             .then((data_1) => {
-              if (slots[j].type === "s") {
-                if (data_1.length > 0)
-                  if (
-                    data_1[0].authers.length ===
-                    slots[j].ground.split("x")[0] * 2
-                  )
-                    slots[j].booked = true;
-                  else {
-                    slots[j].booked = false;
-                    slots[j].booked_cound = data_1[0].authers.length;
-                  }
-                else if (data_1.length > 0) slots[j].booked = true;
-                else slots[j].booked = false;
-              } else if (data_1.length > 0) {
-                if (data_1[0].authers.length > 0) slots[j].booked = true;
-                else slots[j].booked = false;
-              } else slots[j].booked = false;
+              if (data_1.length > 0)
+                if (
+                  data_1[0].authers.length ===
+                  slots[j].ground.split("x")[0] * 2
+                )
+                  slots[j].booked = true;
+                else {
+                  slots[j].booked = false;
+                  slots[j].booked_cound = data_1[0].authers.length;
+                }
+              else if (data_1.length > 0) slots[j].booked = true;
+              else slots[j].booked = false;
             })
             .catch(() => {
               res.status(502).send({ msg: "Database Error" });
