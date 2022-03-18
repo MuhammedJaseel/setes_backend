@@ -10,6 +10,8 @@ exports.mobileAuth = function (req, res, next) {
     return;
   }
 
+  console.log(req.headers.type);
+
   getTables(req.headers.type ?? "users", {
     filter: { _id },
     project: { key: 1 },
