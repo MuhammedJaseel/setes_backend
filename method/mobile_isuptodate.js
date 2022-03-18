@@ -13,7 +13,9 @@ exports.mobileIsuptodate = async (req, res) => {
     return;
   }
   if (logged) {
-    await getTable("users", { _id })
+    const table = req.headers.type == "users_guest" ? "users_guest" : "users";
+
+    await getTable(table, { _id })
       .then((user) => {
         if (user === null) res.status(401).send({ msg: "Not a valid user" });
         else if (user.key === key) {

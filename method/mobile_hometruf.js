@@ -24,7 +24,8 @@ exports.mobileHomeTruf = async (req, res) => {
       { _id: "3", name: "Roy Krishna", img: "max.jpg" },
     ];
 
-  await getTables("users", { filter: { prime: true } })
+  const table = req.headers.type == "users_guest" ? "users_guest" : "users";
+  await getTables(table, { filter: { prime: true } })
     .then((users) => (homeTruf.members = users))
     .catch(() => {
       res.status(502).send({ msg: "Database Error __ON USERS__" });

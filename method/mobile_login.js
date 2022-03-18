@@ -94,7 +94,7 @@ exports.mobileEnterasGust = async (req, res) => {
   var error = false;
   var body = {};
   var key = Math.random().toString();
-  await getTables("users", { limit: 1, filter: { guest: true } })
+  await getTables("users_guest", { limit: 1 })
     .then((user) => {
       var guest_id = "1";
       if (user.length !== 0)
@@ -120,7 +120,7 @@ exports.mobileEnterasGust = async (req, res) => {
       error = true;
     });
   if (error) return;
-  postTable("users", body)
+  postTable("users_guest", body)
     .then((data_1) => res.send({ key, _id: data_1.insertedId, guest: true }))
     .catch((e) => res.status(502).send({ msg: "Database Error" }));
 };

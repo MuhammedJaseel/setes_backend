@@ -11,7 +11,8 @@ exports.mobileGetPropfile = (req, res) => {
     res.status(502).send({ msg: "Database Error" });
     return;
   }
-  getTable("users", { _id })
+  const table = req.headers.type == "users_guest" ? "users_guest" : "users";
+  getTable(table, { _id })
     .then((user) => {
       if (user === null) res.status(400).send({ msg: "User Not Found" });
       else res.send(user);
@@ -27,8 +28,8 @@ exports.mobilePutProfile = async (req, res) => {
     res.status(502).send({ msg: "Error: OBJECTID ERR" });
     return;
   }
-  console.log(req.body);
-  putTable("users", { _id }, { $set: req.body })
+  const table = req.headers.type == "users_guest" ? "users_guest" : "users";
+  putTable(table, { _id }, { $set: req.body })
     .then((user) => res.send({ msg: "Succesfully Updated" }))
     .catch(() => res.status(502).send({ msg: "Database Error" }));
 };
@@ -41,6 +42,7 @@ exports.mobileUpdtaeProfilePic = async (req, res) => {
     res.status(502).send({ msg: "Error: OBJECTID ERR" });
     return;
   }
+  const table = req.headers.type == "users_guest" ? "users_guest" : "users";
   const dir = `./public_asset/members/${_id}`;
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
   if (req.files.img != null) {
@@ -51,7 +53,7 @@ exports.mobileUpdtaeProfilePic = async (req, res) => {
     fs.writeFile(path, image.data, (err) => {
       if (err) res.status(502).send({ msg: "Error: IMAGE ERR" });
       else
-        putTable("users", { _id }, { $set: { img: `max.${type}` } })
+        putTable(table, { _id }, { $set: { img: `max.${type}` } })
           .then(() => res.send({ msg: "Succesfully Updated" }))
           .catch(() => res.status(502).send({ msg: "Database Error" }));
     });
@@ -67,7 +69,8 @@ exports.mobileGetNoti = async (req, res) => {
     res.status(502).send({ msg: "Database Error" });
     return;
   }
-  getTable("users", { _id })
+  const table = req.headers.type == "users_guest" ? "users_guest" : "users";
+  getTable(table, { _id })
     .then((user) => {
       if (user === null) res.status(502).send({ msg: "Database Error" });
       else res.send(user.noti ?? []);
@@ -83,7 +86,8 @@ exports.mobileGetBookings = async (req, res) => {
     res.status(502).send({ msg: "Error: OBJECTID ERR" });
     return;
   }
-  getTable("users", { _id })
+  const table = req.headers.type == "users_guest" ? "users_guest" : "users";
+  getTable(table, { _id })
     .then(async (user) => {
       var bookings = user.bookings ?? [];
       var my_bookings = [];

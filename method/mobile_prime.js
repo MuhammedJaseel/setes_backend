@@ -14,7 +14,8 @@ exports.mobileToPrime = (req, res) => {
   body.primed = { amount: body.amount, made: new Date() };
 
   delete body.amount;
-  putTable("users", { _id }, { $set: body })
+  const table = req.headers.type == "users_guest" ? "users_guest" : "users";
+  putTable(table, { _id }, { $set: body })
     .then((user) => res.send({ msg: "Succesfully Updated" }))
     .catch(() => res.status(502).send({ msg: "Database Error" }));
 };

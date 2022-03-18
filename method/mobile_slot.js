@@ -28,12 +28,12 @@ exports.mobileGetSlot = function (req, res) {
               var authers = [];
               try {
                 for (let i = 0; i < data_1.authers.length; i++)
-                  authers.push(ObjectId(data_1.authers[i]));
+                  authers.push(ObjectId(data_1.authers[i]._id));
               } catch (error) {
                 res.status(502).send({ msg: "Database Error" });
                 return;
               }
-              await getTables("users", {
+              await getTables(data_1.authers[i].type, {
                 filter: { _id: { $in: authers } },
                 project: { id: 1, name: 1, img: 1 },
               })

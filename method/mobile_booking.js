@@ -127,7 +127,7 @@ exports.mobileBookTruf = async (req, res) => {
       res.status(502).send({ msg: "Database Error 1" });
       return;
     }
-    await getTable("users", { _id })
+    await getTable(req.headers.type ?? "users", { _id })
       .then((user) => {
         booking_user = user;
         if (user[body.ac_type] < slot.price) {
@@ -148,7 +148,9 @@ exports.mobileBookTruf = async (req, res) => {
   await getTable("bookings", { slot_id: body.slot_id, date: body.date })
     .then((data) => {
       if (data === null) {
-        booking.authers = [body.user_id];
+        booking.authers = [
+          { _id: body.user_id, type: req.headers.type ?? "users" },
+        ];
         booking.ctaker = slot.ctaker;
         postTable("bookings", booking)
           .then((booked) => {
@@ -184,7 +186,7 @@ exports.mobileBookTruf = async (req, res) => {
             return 0;
           }
         }
-        authers.push(body.user_id);
+        authers.push({ _id: body.user_id, type: req.headers.type ?? "users" });
         putTable("bookings", { _id: data._id }, { $set: { authers } })
           .then(() => {
             res.send({ msg: "Succesfully Booked" });

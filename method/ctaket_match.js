@@ -22,9 +22,9 @@ exports.ctakerGetMatch = async (req, res) => {
       } else {
         try {
           for (let a = 0; a < booking.authers.length; a++) {
-            booking.authers[a] = ObjectId(booking.authers[a]);
+            booking.authers[a]._id = ObjectId(booking.authers[a]._id);
           }
-          await getTables("users", {
+          await getTables(booking.authers[a]._id, {
             filter: { _id: { $in: booking.authers } },
             project: {
               name: 1,
@@ -64,7 +64,6 @@ exports.ctakerGetMatch = async (req, res) => {
               return;
             });
           _id = ObjectId(booking.slot.truf__id);
-          console.log(_id);
           await getTable("trufs", { _id })
             .then((truf) => {
               if (truf === null) {
