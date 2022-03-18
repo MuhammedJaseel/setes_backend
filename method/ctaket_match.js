@@ -99,19 +99,39 @@ exports.ctakerGetMatch = async (req, res) => {
 
 exports.ctakerGetAllMatchs = async (req, res) => {
   var ctaker = req.query.ctaker_id;
-  await getnolimitTables("bookings", { filter: { ctaker } })
-    .then(async (bookings) => {
-      for (let i = 0; i < bookings.length; i++) {
-        try {
-          var _id = ObjectId(bookings[i].slot_id);
-          await getTable("slots", { _id }).then(
-            (slot) => (bookings[i].slot = slot)
-          );
-        } catch (error) {}
-      }
-      res.send(bookings);
+  var data = [];
+  await getnolimitTables("bookings", { filter: { date, ctaker } })
+    .then((bookings) => {
+      if (bookings != null) data = data.concat(bookings);
     })
-    .catch(() => res.status(502).send({ msg: "Error: Database error" }));
+    .catch(() => (error = true));
+  await getnolimitTables("matchs_live", { filter: { date, ctaker } })
+    .then((bookings) => {
+      if (bookings != null) data = data.concat(bookings);
+    })
+    .catch(() => (error = true));
+  await getnolimitTables("matchs_fulltime", { filter: { date, ctaker } })
+    .then((bookings) => {
+      if (bookings != null) data = data.concat(bookings);
+    })
+    .catch(() => (error = true));
+  await getnolimitTables("matchs_cancelled", { filter: { date, ctaker } })
+    .then((bookings) => {
+      if (bookings != null) data = data.concat(bookings);
+    })
+    .catch(() => (error = true));
+  for (let i = 0; i < data.length; i++) {
+    try {
+      var _id = ObjectId(data[i].slot_id);
+      await getTable("slots", { _id })
+        .then((slot) => (data[i].slot = slot))
+        .catch(() => (error = true));
+    } catch (error) {
+      error = true;
+    }
+  }
+  if (error) res.status(502).send({ msg: "Error: Database error" });
+  else res.send(data);
 };
 
 exports.ctakerGetMatchs = async (req, res) => {
@@ -125,9 +145,32 @@ exports.ctakerGetMatchs = async (req, res) => {
   while (!complated) {
     today.setDate(today.getDate() + 1);
     date = dateTomyFormat(today);
+
+    var myRes = { title: date, data: [] };
+
     await getnolimitTables("bookings", { filter: { date, ctaker } })
-      .then((bookings) => response.push({ title: date, data: bookings ?? [] }))
+      .then((bookings) => {
+        if (bookings != null) myRes.data = myRes.data.concat(bookings);
+      })
       .catch((e) => (error = true));
+    await getnolimitTables("matchs_live", { filter: { date, ctaker } })
+      .then((bookings) => {
+        if (bookings != null) myRes.data = myRes.data.concat(bookings);
+      })
+      .catch((e) => (error = true));
+    await getnolimitTables("matchs_fulltime", { filter: { date, ctaker } })
+      .then((bookings) => {
+        if (bookings != null) myRes.data = myRes.data.concat(bookings);
+      })
+      .catch((e) => (error = true));
+    await getnolimitTables("matchs_cancelled", { filter: { date, ctaker } })
+      .then((bookings) => {
+        if (bookings != null) myRes.data = myRes.data.concat(bookings);
+      })
+      .catch((e) => (error = true));
+
+    response.push(myRes);
+
     if (error) break;
     var length = 0;
     for (let i = 0; i < response.length; i++) length += response[i].data.length;
