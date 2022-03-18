@@ -74,23 +74,9 @@ exports.adminGetHome = async function (req, res) {
   if (error) return;
 
   //   bookings
-  await getTables("bookings", {
-    filter: { type: "t" },
-    sort: { _id: -1 },
-    limit: 50,
-  })
-    .then((data) => (homedata.bookings = { team: data, setes: [] }))
-    .catch(() => {
-      res.status(502).send({ msg: "Error: OBJECTID ERR:bookings" });
-      error = true;
-    });
-  if (error) return;
-  await getTables("bookings", {
-    filter: { type: "s" },
-    sort: { _id: -1 },
-    limit: 50,
-  })
-    .then((data) => (homedata.bookings.setes = data))
+
+  await getTables("bookings", { limit: 50 })
+    .then((data) => (homedata.bookings = data))
     .catch(() => {
       res.status(502).send({ msg: "Error: OBJECTID ERR:bookings" });
       error = true;
@@ -98,23 +84,8 @@ exports.adminGetHome = async function (req, res) {
   if (error) return;
 
   //   slots
-  await getTables("slots", {
-    filter: { type: "t" },
-    sort: { _id: -1 },
-    limit: 50,
-  })
-    .then((data) => (homedata.slots = { team: data, setes: [] }))
-    .catch(() => {
-      res.status(502).send({ msg: "Error: OBJECTID ERR:slots" });
-      error = true;
-    });
-  if (error) return;
-  await getTables("slots", {
-    filter: { type: "s" },
-    sort: { _id: -1 },
-    limit: 50,
-  })
-    .then((data) => (homedata.slots.setes = data))
+  await getTables("slots", { limit: 50 })
+    .then((data) => (homedata.slots = data))
     .catch(() => {
       res.status(502).send({ msg: "Error: OBJECTID ERR:slots" });
       error = true;

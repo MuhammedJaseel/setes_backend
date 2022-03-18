@@ -4,7 +4,7 @@ const { ctakerAddNoti } = require("./ctaker_noti");
 var ObjectId = require("mongodb").ObjectId;
 
 exports.mobileVerifyBooking = async (req, res) => {
-  // body={ slot_id, date, type, user_id }
+  // body={ slot_id, date,  user_id }
   var body = req.body;
   var slot = {};
   var booking_user = {};
@@ -50,36 +50,27 @@ exports.mobileVerifyBooking = async (req, res) => {
       if (data === null)
         res.send({ wallet: booking_user.wallet, credit: booking_user.credit });
       else {
-        if (data.type !== body.type)
-          res.send({
-            wallet: booking_user.wallet,
-            credit: booking_user.credit,
-          });
-        else {
-          if (body.type === "s") {
-            const authers = data.authers;
-            if (
-              slot.ground.split("x")[0] * 2 === authers.length ||
-              data.status !== "Booked"
-            ) {
-              if (data.status !== "Booked")
-                res.status(400).send({ msg: "Slot Is " + data.status });
-              else res.status(400).send({ msg: "Slot Is Full" });
-              return 0;
-            }
-            for (let k = 0; k < authers.length; k++) {
-              if (authers[k] === body.user_id) {
-                const msg = "You are already booked to the current slot";
-                res.status(400).send({ msg });
-                return 0;
-              }
-            }
-            res.send({
-              wallet: booking_user.wallet,
-              credit: booking_user.credit,
-            });
-          } else res.status(400).send({ msg: "Slot is Allready Booked" });
+        const authers = data.authers;
+        if (
+          slot.ground.split("x")[0] * 2 === authers.length ||
+          data.status !== "Booked"
+        ) {
+          if (data.status !== "Booked")
+            res.status(400).send({ msg: "Slot Is " + data.status });
+          else res.status(400).send({ msg: "Slot Is Full" });
+          return 0;
         }
+        for (let k = 0; k < authers.length; k++) {
+          if (authers[k] === body.user_id) {
+            const msg = "You are already booked to the current slot";
+            res.status(400).send({ msg });
+            return 0;
+          }
+        }
+        res.send({
+          wallet: booking_user.wallet,
+          credit: booking_user.credit,
+        });
       }
     })
     .catch(() => {
@@ -89,12 +80,12 @@ exports.mobileVerifyBooking = async (req, res) => {
 };
 
 exports.mobileBookTruf = async (req, res) => {
-  // body={ slot_id, date, type, user_id , ac_type}
+  // body={ slot_id, date,  user_id , ac_type}
   var body = req.body;
   var booking = {
     slot_id: body.slot_id,
     date: body.date,
-    type: body.type,
+    type: "s",
     authers: body.user_id,
     created: new Date(),
     updated: [],
@@ -152,10 +143,8 @@ exports.mobileBookTruf = async (req, res) => {
   await getTable("bookings", { slot_id: body.slot_id, date: body.date })
     .then((data) => {
       if (data === null) {
-        if (body.type === "s") {
-          booking.authers = [body.user_id];
-          booking.ctaker = slot.ctaker;
-        }
+        booking.authers = [body.user_id];
+        booking.ctaker = slot.ctaker;
         postTable("bookings", booking)
           .then((booked) => {
             res.send({ msg: "Succesfully Booked" });
@@ -173,60 +162,56 @@ exports.mobileBookTruf = async (req, res) => {
           })
           .catch(() => res.status(502).send({ msg: "Database Error 3" }));
       } else {
-        if (data.type !== body.type)
-          res.status(400).send({ msg: "Wrong Input" });
-        else if (body.type === "s") {
-          const authers = data.authers;
-          if (
-            slot.ground.split("x")[0] * 2 === authers.length ||
-            data.status !== "Booked"
-          ) {
-            if (data.status !== "Booked")
-              res.status(400).send({ msg: "Slot Is " + data.status });
-            else res.status(400).send({ msg: "Slot Is Full" });
+        const authers = data.authers;
+        if (
+          slot.ground.split("x")[0] * 2 === authers.length ||
+          data.status !== "Booked"
+        ) {
+          if (data.status !== "Booked")
+            res.status(400).send({ msg: "Slot Is " + data.status });
+          else res.status(400).send({ msg: "Slot Is Full" });
+          return 0;
+        }
+        for (let k = 0; k < authers.length; k++) {
+          if (authers[k] === body.user_id) {
+            var msg = "You are already booked to the current slot";
+            res.status(400).send({ msg });
             return 0;
           }
-          for (let k = 0; k < authers.length; k++) {
-            if (authers[k] === body.user_id) {
-              var msg = "You are already booked to the current slot";
-              res.status(400).send({ msg });
-              return 0;
+        }
+        authers.push(body.user_id);
+        putTable("bookings", { _id: data._id }, { $set: { authers } })
+          .then(() => {
+            res.send({ msg: "Succesfully Booked" });
+            if (slot.ground.split("x")[0] * 2 === authers.length - 1) {
+              postTable("matchs", {
+                booking_id: data._id,
+                slot_id: body.slot_id,
+                date: body.date,
+                authers: body.user_id,
+                created: new Date(),
+                status: "Booked",
+                started: false,
+                ended: false,
+              }).catch((e) => console.log(e));
             }
-          }
-          authers.push(body.user_id);
-          putTable("bookings", { _id: data._id }, { $set: { authers } })
-            .then(() => {
-              res.send({ msg: "Succesfully Booked" });
-              if (slot.ground.split("x")[0] * 2 === authers.length - 1) {
-                postTable("matchs", {
-                  booking_id: data._id,
-                  slot_id: body.slot_id,
-                  date: body.date,
-                  authers: body.user_id,
-                  created: new Date(),
-                  status: "Booked",
-                  started: false,
-                  ended: false,
-                }).catch((e) => console.log(e));
-              }
-              setUserBookingHistory(
-                booking_user,
-                data._id,
-                body.ac_type,
-                slot.price
-              );
-              var desc = `New Booking to truf ${slot.truf_name} (${slot.truf_id})`;
-              adminAddNoti("New Booking", desc, "Setes Booking");
-              desc = `New Booking to truf ${slot.truf_name} (${slot.truf_id})`;
-              ctakerAddNoti(
-                slot.ctaker,
-                "One more player is added",
-                desc,
-                "New Player"
-              );
-            })
-            .catch(() => res.status(502).send({ msg: "Database Error 5" }));
-        } else res.status(400).send({ msg: "Slot is Allready Booked" });
+            setUserBookingHistory(
+              booking_user,
+              data._id,
+              body.ac_type,
+              slot.price
+            );
+            var desc = `New Booking to truf ${slot.truf_name} (${slot.truf_id})`;
+            adminAddNoti("New Booking", desc, "Setes Booking");
+            desc = `New Booking to truf ${slot.truf_name} (${slot.truf_id})`;
+            ctakerAddNoti(
+              slot.ctaker,
+              "One more player is added",
+              desc,
+              "New Player"
+            );
+          })
+          .catch(() => res.status(502).send({ msg: "Database Error 5" }));
       }
     })
     .catch(() => {
