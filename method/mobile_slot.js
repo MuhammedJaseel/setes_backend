@@ -41,6 +41,7 @@ exports.mobileGetSlot = function (req, res) {
                   data.booking = data_1;
                   data.authers = user;
                   res.send(data);
+                  console.log(data);
                 })
                 .catch((err) => {
                   res.status(502).send({ msg: "Database Error" });
