@@ -266,6 +266,9 @@ exports.ctakerDeleteMatch = (req, res) => {
 
 exports.ctakerPutslot = async (req, res) => {
   var body = req.body;
+
+  console.log(body);
+  
   var error = false;
   var _id;
   try {
@@ -330,7 +333,7 @@ exports.ctakerPutslot = async (req, res) => {
             });
         }
         if (body.status === "Update") {
-          res.send("done")
+          res.send("done");
           console.log(body);
         }
       }
