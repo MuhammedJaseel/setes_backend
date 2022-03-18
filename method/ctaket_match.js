@@ -49,9 +49,6 @@ exports.ctakerGetMatch = async (req, res) => {
             else authers.push(ObjectId(booking.authers[a]._id));
           }
 
-          console.log(authers_guest);
-          console.log(authers);
-
           await getTables("users_guest", {
             filter: { _id: { $in: authers_guest } },
             project,
@@ -202,47 +199,101 @@ exports.ctakerPutslot = async (req, res) => {
     return;
   }
 
-  if (body.hasOwnProperty("events")) {
-    await getTable("bookings", { _id })
-      .then((data) => {
-        body.events.created = new Date();
-        if (data === null) body.events = [body.events];
-        else {
-          data.events.push(body.events);
-          body.events = data.events;
-        }
-      })
-      .catch(() => {
-        res.status(502).send({ msg: "Database Error" });
-        error = true;
-      });
+  var table = "bookings";
+  if (body.status === "Fulltime") table = "matchs_live";
+  if (body.status === "Update") {
+    if (body.curr_status === "Started") table = "matchs_live";
+    else table = "matchs_fulltime";
   }
 
+  await getTable(table, { _id })
+    .then((booking) => {
+      if (data == null) {
+        res.status(502).send({ msg: "Thire is no match" });
+        error = true;
+      } else {
+        booking = data;
+        if (body.status === "Started") {
+          booking.starting_time = new Date();
+          booking.events = [];
+          booking.goals = { r: 0, b: 0 };
+          booking.fouls = { r: 0, b: 0 };
+          booking.rcs = { r: 0, b: 0 };
+          booking.ycs = { r: 0, b: 0 };
+          booking.shots = { r: 0, b: 0 };
+          booking.possessions = { r: 0, b: 0 };
+          booking.offsides = { r: 0, b: 0 };
+          booking.corners = { r: 0, b: 0 };
+          booking.teams = body.teams;
+          postTable("matchs_live", booking)
+            .then(() => {
+              deleteTable("bookings", { _id });
+            })
+            .catch(() => {
+              res.status(502).send({ msg: "Database Error" });
+              error = true;
+            });
+        }
+        if (body.status === "Cancelled") {
+          booking.cancelled_time = new Date();
+          postTable("matchs_cancelled", booking)
+            .then(() => {
+              deleteTable("bookings", { _id });
+            })
+            .catch(() => {
+              res.status(502).send({ msg: "Database Error" });
+              error = true;
+            });
+        }
+        if (body.status === "Fulltime") {
+          booking.ending_time = new Date();
+          postTable("matchs_fulltime", booking)
+            .then(() => {
+              deleteTable("matchs_live", { _id });
+            })
+            .catch(() => {
+              res.status(502).send({ msg: "Database Error" });
+              error = true;
+            });
+        }
+        if (body.status === "Update") {
+          console.log(body);
+        }
+      }
+    })
+    .catch(() => {
+      res.status(502).send({ msg: "Database Error" });
+      error = true;
+    });
   if (error) return;
 
-  if (body.hasOwnProperty("status")) {
-    if (body.status === "Started") {
-      body.starting_time = new Date();
-      body.events = [];
-      body.goals = { r: 0, b: 0 };
-      body.fouls = { r: 0, b: 0 };
-      body.rcs = { r: 0, b: 0 };
-      body.ycs = { r: 0, b: 0 };
-      body.shots = { r: 0, b: 0 };
-      body.possessions = { r: 0, b: 0 };
-      body.offsides = { r: 0, b: 0 };
-      body.corners = { r: 0, b: 0 };
-    }
-    if (body.status === "Fulltime") body.ending_time = new Date();
-  }
-
-  await putTable("bookings", { _id }, { $set: body })
-    .then((data) => {
-      if (data.modifiedCount === 0)
-        res.status(502).send({ msg: "Database Error" });
-      else res.send({ msg: "Succesfully Updated" });
-    })
-    .catch(() => res.status(502).send({ msg: "Database Error" }));
+  // var match = {};
+  // if (body.hasOwnProperty("events")) {
+  //   await getTable("matchs_live", { _id })
+  //     .then((data) => {
+  //       if (data == null) {
+  //         res.status(502).send({ msg: "Thir is no booking" });
+  //         error = true;
+  //       }
+  //       match = data;
+  //     })
+  //     .catch(() => {
+  //       res.status(502).send({ msg: "Database Error" });
+  //       error = true;
+  //     });
+  //   if (error) return;
+  //   body.events.created = new Date();
+  //   data.events.push(body.events);
+  //   body.events = data.events;
+  //   await putTable("matchs_live", { _id }, { $set: body })
+  //     .then((data) => {
+  //       if (data.modifiedCount === 0)
+  //         res.status(502).send({ msg: "Database Error" });
+  //       else res.send({ msg: "Succesfully Updated" });
+  //     })
+  //     .catch(() => res.status(502).send({ msg: "Database Error" }));
+  // }
+  // if (error) return;
 };
 
 // [
@@ -254,7 +305,6 @@ exports.ctakerPutslot = async (req, res) => {
 //       player: "Guest123",
 //     },
 //   },
-
 //   {
 //     title: "Fouls",
 //     data: {
@@ -264,7 +314,6 @@ exports.ctakerPutslot = async (req, res) => {
 //       team: "b",
 //     },
 //   },
-
 //   {
 //     title: "Yellow card",
 //     data: {
