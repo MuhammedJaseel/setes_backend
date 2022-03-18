@@ -59,7 +59,7 @@ exports.ctakerGetMatch = async (req, res) => {
             project,
           })
             .then((users) => {
-              for (let i = 0; i < users.length; i++) users.guest = true;
+              for (let i = 0; i < users.length; i++) users[i].isguest = true;
               booking.authers = users;
             })
             .catch(() => (error = "Database Error1"));
@@ -69,7 +69,7 @@ exports.ctakerGetMatch = async (req, res) => {
             project,
           })
             .then((users) => {
-              for (let i = 0; i < users.length; i++) users.guest = false;
+              for (let i = 0; i < users.length; i++) users[i].isguest = false;
               booking.authers = booking.authers.concat(users);
             })
             .catch(() => (error = "Database Error2"));
