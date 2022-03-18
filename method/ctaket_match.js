@@ -14,7 +14,6 @@ exports.ctakerGetMatch = async (req, res) => {
   }
   var error = null;
 
-  console.log(req.query);
   var table = "bookings";
   if (req.query.status === "Started") table = "matchs_live";
   if (req.query.status === "Fulltime") table = "matchs_fulltime";
@@ -97,6 +96,7 @@ exports.ctakerGetMatch = async (req, res) => {
           error = "Database error on Bookings";
         }
       }
+      booking.status = req.query.status;
       if (error === null) res.send(booking);
     })
     .catch((err) => res.status(502).send({ msg: "Database Error" }));
