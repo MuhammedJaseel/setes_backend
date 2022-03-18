@@ -15,6 +15,7 @@ exports.mobileGetSlot = function (req, res) {
     .then((data) => {
       getTable("bookings", { date, slot_id: _id.toString() })
         .then(async (data_1) => {
+          console.log(data_1);
           if (data_1 == null) {
             if (data.type === "t") res.send(data);
             else {
@@ -41,7 +42,6 @@ exports.mobileGetSlot = function (req, res) {
                   data.booking = data_1;
                   data.authers = user;
                   res.send(data);
-                  console.log(data);
                 })
                 .catch((err) => {
                   res.status(502).send({ msg: "Database Error" });
