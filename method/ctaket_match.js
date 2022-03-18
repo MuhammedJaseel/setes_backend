@@ -102,22 +102,37 @@ exports.ctakerGetAllMatchs = async (req, res) => {
   var data = [];
   await getnolimitTables("bookings", { filter: { date, ctaker } })
     .then((bookings) => {
-      if (bookings != null) data = data.concat(bookings);
+      if (bookings != null) {
+        for (let i = 0; i < bookings.length; i++) bookings[i].status = "Booked";
+        myRes.data = myRes.data.concat(bookings);
+      }
     })
     .catch(() => (error = true));
   await getnolimitTables("matchs_live", { filter: { date, ctaker } })
     .then((bookings) => {
-      if (bookings != null) data = data.concat(bookings);
+      if (bookings != null) {
+        for (let i = 0; i < bookings.length; i++)
+          bookings[i].status = "Started";
+        myRes.data = myRes.data.concat(bookings);
+      }
     })
     .catch(() => (error = true));
   await getnolimitTables("matchs_fulltime", { filter: { date, ctaker } })
     .then((bookings) => {
-      if (bookings != null) data = data.concat(bookings);
+      if (bookings != null) {
+        for (let i = 0; i < bookings.length; i++)
+          bookings[i].status = "Fulltime";
+        myRes.data = myRes.data.concat(bookings);
+      }
     })
     .catch(() => (error = true));
   await getnolimitTables("matchs_cancelled", { filter: { date, ctaker } })
     .then((bookings) => {
-      if (bookings != null) data = data.concat(bookings);
+      if (bookings != null) {
+        for (let i = 0; i < bookings.length; i++)
+          bookings[i].status = "Cancelled";
+        myRes.data = myRes.data.concat(bookings);
+      }
     })
     .catch(() => (error = true));
   for (let i = 0; i < data.length; i++) {
@@ -145,32 +160,44 @@ exports.ctakerGetMatchs = async (req, res) => {
   while (!complated) {
     today.setDate(today.getDate() + 1);
     date = dateTomyFormat(today);
-
     var myRes = { title: date, data: [] };
-
     await getnolimitTables("bookings", { filter: { date, ctaker } })
       .then((bookings) => {
-        if (bookings != null) myRes.data = myRes.data.concat(bookings);
+        if (bookings != null) {
+          for (let i = 0; i < bookings.length; i++)
+            bookings[i].status = "Booked";
+          myRes.data = myRes.data.concat(bookings);
+        }
       })
       .catch((e) => (error = true));
     await getnolimitTables("matchs_live", { filter: { date, ctaker } })
       .then((bookings) => {
-        if (bookings != null) myRes.data = myRes.data.concat(bookings);
+        if (bookings != null) {
+          for (let i = 0; i < bookings.length; i++)
+            bookings[i].status = "Started";
+          myRes.data = myRes.data.concat(bookings);
+        }
       })
       .catch((e) => (error = true));
     await getnolimitTables("matchs_fulltime", { filter: { date, ctaker } })
       .then((bookings) => {
-        if (bookings != null) myRes.data = myRes.data.concat(bookings);
+        if (bookings != null) {
+          for (let i = 0; i < bookings.length; i++)
+            bookings[i].status = "Fulltime";
+          myRes.data = myRes.data.concat(bookings);
+        }
       })
       .catch((e) => (error = true));
     await getnolimitTables("matchs_cancelled", { filter: { date, ctaker } })
       .then((bookings) => {
-        if (bookings != null) myRes.data = myRes.data.concat(bookings);
+        if (bookings != null) {
+          for (let i = 0; i < bookings.length; i++)
+            bookings[i].status = "Cancelled";
+          myRes.data = myRes.data.concat(bookings);
+        }
       })
       .catch((e) => (error = true));
-
     response.push(myRes);
-
     if (error) break;
     var length = 0;
     for (let i = 0; i < response.length; i++) length += response[i].data.length;
