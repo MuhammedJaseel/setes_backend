@@ -251,11 +251,10 @@ exports.ctakerPutslot = async (req, res) => {
 
   await getTable(table, { _id })
     .then((booking) => {
-      if (data == null) {
+      if (booking == null) {
         res.status(502).send({ msg: "Thire is no match" });
         error = true;
       } else {
-        booking = data;
         if (body.status === "Started") {
           booking.starting_time = new Date();
           booking.events = [];
@@ -303,7 +302,6 @@ exports.ctakerPutslot = async (req, res) => {
       }
     })
     .catch((e) => {
-      console.log(e);
       res.status(502).send({ msg: "Database Error" });
       error = true;
     });
