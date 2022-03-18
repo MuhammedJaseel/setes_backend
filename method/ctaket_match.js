@@ -281,7 +281,7 @@ exports.ctakerPutslot = async (req, res) => {
   var table = "bookings";
   if (body.status === "Fulltime") table = "matchs_live";
   if (body.status === "Update") {
-    if (body.curr_status === "Started") table = "matchs_live";
+    if (body.cur_status === "Started") table = "matchs_live";
     else table = "matchs_fulltime";
   }
 
