@@ -268,7 +268,7 @@ exports.ctakerPutslot = async (req, res) => {
   var body = req.body;
 
   console.log(body);
-  
+
   var error = false;
   var _id;
   try {
@@ -284,6 +284,8 @@ exports.ctakerPutslot = async (req, res) => {
     if (body.curr_status === "Started") table = "matchs_live";
     else table = "matchs_fulltime";
   }
+
+  console.log(table);
 
   await getTable(table, { _id })
     .then((booking) => {
