@@ -266,9 +266,6 @@ exports.ctakerDeleteMatch = (req, res) => {
 
 exports.ctakerPutslot = async (req, res) => {
   var body = req.body;
-
-  console.log(body);
-
   var error = false;
   var _id;
   try {
@@ -285,7 +282,14 @@ exports.ctakerPutslot = async (req, res) => {
     else table = "matchs_fulltime";
   }
 
-  console.log(table);
+  if (body.status === "Update") {
+    delete body.status;
+    delete body.cur_status;
+    await putTable(table, { _id }, { $set: body })
+      .then(() => res.send({ msg: "Succesfully Updated" }))
+      .catch(() => res.status(502).send({ msg: "Database Error" }));
+    return;
+  }
 
   await getTable(table, { _id })
     .then((booking) => {
@@ -333,10 +337,6 @@ exports.ctakerPutslot = async (req, res) => {
               res.status(502).send({ msg: "Database Error" });
               error = true;
             });
-        }
-        if (body.status === "Update") {
-          res.send("done");
-          console.log(body);
         }
       }
     })
