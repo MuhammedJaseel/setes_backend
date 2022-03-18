@@ -129,7 +129,7 @@ exports.mobileBookTruf = async (req, res) => {
       res.status(502).send({ msg: "Database Error 1" });
       return;
     }
-    await getTable(usertable, { _id: user_id })
+    await getTable(usertable, { _id })
       .then((user) => {
         booking_user = user;
         if (user[body.ac_type] < slot.price) {
