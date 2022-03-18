@@ -18,8 +18,6 @@ exports.mobileGetSlot = function (req, res) {
           if (booking == null) {
             data.authers = [];
             res.send(data);
-            console.log("data1");
-            console.log(data);
           } else {
             var authers = [];
             try {
@@ -37,10 +35,9 @@ exports.mobileGetSlot = function (req, res) {
                 data.booking = booking;
                 data.authers = users;
                 res.send(data);
-                console.log("data2");
-                console.log(data);
               })
               .catch((err) => {
+                console.log(err);
                 res.status(502).send({ msg: "Database Error" });
                 return;
               });
