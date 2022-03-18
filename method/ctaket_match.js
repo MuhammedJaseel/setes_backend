@@ -58,14 +58,20 @@ exports.ctakerGetMatch = async (req, res) => {
             filter: { _id: { $in: authers_guest } },
             project,
           })
-            .then((users) => (booking.authers = users))
+            .then((users) => {
+              for (let i = 0; i < users.length; i++) users.guest = true;
+              booking.authers = users;
+            })
             .catch(() => (error = "Database Error1"));
 
           await getTables("users", {
             filter: { _id: { $in: authers } },
             project,
           })
-            .then((users) => (booking.authers = booking.authers.concat(users)))
+            .then((users) => {
+              for (let i = 0; i < users.length; i++) users.guest = false;
+              booking.authers = booking.authers.concat(users);
+            })
             .catch(() => (error = "Database Error2"));
 
           var _id = ObjectId(booking.slot_id);
