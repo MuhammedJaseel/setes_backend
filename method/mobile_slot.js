@@ -14,40 +14,32 @@ exports.mobileGetSlot = function (req, res) {
   getTable("slots", { _id })
     .then((data) => {
       getTable("bookings", { date, slot_id: _id.toString() })
-        .then(async (data_1) => {
-          console.log(data_1);
-          if (data_1 == null) {
-            if (data.type === "t") res.send(data);
-            else {
-              data.authers = [];
-              res.send(data);
-            }
+        .then(async (booking) => {
+          if (booking == null) {
+            data.authers = [];
+            res.send(data);
           } else {
-            if (data.type === "t")
-              res.status(410).send({ msg: "The truf is allredy booked." });
-            else if (data_1.authers.length < data.ground.split("x")[0] * 2) {
-              var authers = [];
-              try {
-                for (let i = 0; i < data_1.authers.length; i++)
-                  authers.push(ObjectId(data_1.authers[i]._id));
-              } catch (error) {
+            var authers = [];
+            try {
+              for (let i = 0; i < booking.authers.length; i++)
+                authers.push(ObjectId(booking.authers[i]._id));
+            } catch (error) {
+              res.status(502).send({ msg: "Database Error" });
+              return;
+            }
+            await getTables(booking.authers[i].type, {
+              filter: { _id: { $in: authers } },
+              project: { id: 1, name: 1, img: 1 },
+            })
+              .then((users) => {
+                data.booking = booking;
+                data.authers = users;
+                res.send(data);
+              })
+              .catch((err) => {
                 res.status(502).send({ msg: "Database Error" });
                 return;
-              }
-              await getTables(data_1.authers[i].type, {
-                filter: { _id: { $in: authers } },
-                project: { id: 1, name: 1, img: 1 },
-              })
-                .then((user) => {
-                  data.booking = data_1;
-                  data.authers = user;
-                  res.send(data);
-                })
-                .catch((err) => {
-                  res.status(502).send({ msg: "Database Error" });
-                  return;
-                });
-            } else res.status(410).send({ msg: "The truf is allredy booked." });
+              });
           }
         })
         .catch((err) => res.status(502).send({ msg: "Database Error" }));
