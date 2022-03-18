@@ -302,7 +302,8 @@ exports.ctakerPutslot = async (req, res) => {
         }
       }
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log(e);
       res.status(502).send({ msg: "Database Error" });
       error = true;
     });
