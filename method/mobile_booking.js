@@ -48,7 +48,11 @@ exports.mobileVerifyBooking = async (req, res) => {
   await getTable("bookings", { slot_id: body.slot_id, date: body.date })
     .then((data) => {
       if (data === null)
-        res.send({ wallet: booking_user.wallet, credit: booking_user.credit });
+        res.send({
+          wallet: booking_user.wallet,
+          credit: booking_user.credit,
+          payment_api: "rzp_test_Y7JuSZ90XUqdEG",
+        });
       else {
         const authers = data.authers;
         if (
@@ -70,6 +74,7 @@ exports.mobileVerifyBooking = async (req, res) => {
         res.send({
           wallet: booking_user.wallet,
           credit: booking_user.credit,
+          payment_api: "rzp_test_Y7JuSZ90XUqdEG",
         });
       }
     })
