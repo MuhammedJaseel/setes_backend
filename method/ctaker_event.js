@@ -13,7 +13,7 @@ exports.ctakerAddEvent = async (req, res) => {
   delete body.match_id;
   var table = body.status == "Started" ? "matchs_live" : "matchs_fulltime";
   res.send("done");
-  console.log(body.who.status);
+  console.log(body.who);
   // await getTable(table, { _id })
   //   .then(async (booking) => {
   //     if (booking !== null) {
