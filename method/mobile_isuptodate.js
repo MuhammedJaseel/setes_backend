@@ -13,7 +13,7 @@ exports.mobileIsuptodate = async (req, res) => {
     return;
   }
   if (logged) {
-    const table = req.headers.type == "users_guest" ? "users_guest" : "users";
+    const table = req.body.isguest ? "users_guest" : "users";
 
     await getTable(table, { _id })
       .then((user) => {
