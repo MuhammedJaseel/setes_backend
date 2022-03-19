@@ -38,7 +38,7 @@ exports.mobileGethome = async (req, res) => {
   var filter = {
     status: { $in: ["Fulltime", "Started"] },
   };
-  await getTables("bookings", { filter, limit: 15 })
+  await getTables("matchs_live", { filter, limit: 15 })
     .then(async (bookings) => {
       var _id;
       for (let i = 0; i < bookings.length; i++) {
