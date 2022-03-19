@@ -56,6 +56,7 @@ exports.mobileGethome = async (req, res) => {
             error = true;
           });
       }
+      for (let i = 0; i < bookings.length; i++) bookings[i].status = "Started";
       tempData.bookings = bookings;
     })
     .catch((e) => {
@@ -82,6 +83,7 @@ exports.mobileGethome = async (req, res) => {
             error = true;
           });
       }
+      for (let i = 0; i < bookings.length; i++) bookings[i].status = "Fulltime";
       tempData.bookings = tempData.bookings.concat(bookings);
     })
     .catch((e) => {
