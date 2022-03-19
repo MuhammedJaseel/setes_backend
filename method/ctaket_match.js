@@ -112,7 +112,7 @@ exports.ctakerGetMatch = async (req, res) => {
 exports.ctakerGetAllMatchs = async (req, res) => {
   var ctaker = req.query.ctaker_id;
   var data = [];
-  await getnolimitTables("bookings", { filter: { date, ctaker } })
+  await getnolimitTables("bookings", { filter: { ctaker } })
     .then((bookings) => {
       if (bookings != null) {
         for (let i = 0; i < bookings.length; i++) bookings[i].status = "Booked";
@@ -120,7 +120,7 @@ exports.ctakerGetAllMatchs = async (req, res) => {
       }
     })
     .catch(() => (error = true));
-  await getnolimitTables("matchs_live", { filter: { date, ctaker } })
+  await getnolimitTables("matchs_live", { filter: { ctaker } })
     .then((bookings) => {
       if (bookings != null) {
         for (let i = 0; i < bookings.length; i++)
@@ -129,7 +129,7 @@ exports.ctakerGetAllMatchs = async (req, res) => {
       }
     })
     .catch(() => (error = true));
-  await getnolimitTables("matchs_fulltime", { filter: { date, ctaker } })
+  await getnolimitTables("matchs_fulltime", { filter: { ctaker } })
     .then((bookings) => {
       if (bookings != null) {
         for (let i = 0; i < bookings.length; i++)
@@ -138,7 +138,7 @@ exports.ctakerGetAllMatchs = async (req, res) => {
       }
     })
     .catch(() => (error = true));
-  await getnolimitTables("matchs_cancelled", { filter: { date, ctaker } })
+  await getnolimitTables("matchs_cancelled", { filter: { ctaker } })
     .then((bookings) => {
       if (bookings != null) {
         for (let i = 0; i < bookings.length; i++)
