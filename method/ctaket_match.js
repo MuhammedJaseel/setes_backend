@@ -112,6 +112,7 @@ exports.ctakerGetMatch = async (req, res) => {
 exports.ctakerGetAllMatchs = async (req, res) => {
   var ctaker = req.query.ctaker_id;
   var data = [];
+  var error = null;
   await getnolimitTables("bookings", { filter: { ctaker } })
     .then((bookings) => {
       if (bookings != null) {
