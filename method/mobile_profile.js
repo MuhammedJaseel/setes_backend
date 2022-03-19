@@ -3,7 +3,7 @@ const { getTable, putTable } = require("../module/database");
 const fs = require("fs");
 
 // SECTION:STARTS => TOPIC: its all related to user profile////////////////////////////////////////
-exports.mobileGetPropfile = (req, res) => {
+exports.mobileGetProfile = (req, res) => {
   var _id;
   try {
     _id = ObjectId(req.query.user_id);
