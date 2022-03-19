@@ -64,6 +64,33 @@ exports.mobileGethome = async (req, res) => {
       res.status(502).send({ msg: "Database Error __BOOKINGS__" });
       error = true;
     });
+  await getTables("matchs_fulltime", { filter, limit: 15 })
+    .then(async (bookings) => {
+      var _id;
+      for (let i = 0; i < bookings.length; i++) {
+        try {
+          _id = ObjectId(bookings[i].slot_id);
+        } catch (error) {
+          res.status(502).send({ msg: "Database Error __SLOTS ID__" });
+          error = true;
+          break;
+        }
+        await getTable("slots", { _id })
+          .then((slot) => {
+            bookings[i].slot = slot;
+          })
+          .catch((e) => {
+            res.status(502).send({ msg: "Database Error __SLOTS__" });
+            error = true;
+          });
+      }
+      tempData.bookings = tempData.bookings.concat(bookings);
+    })
+    .catch((e) => {
+      res.status(502).send({ msg: "Database Error __BOOKINGS__" });
+      error = true;
+    });
   if (error) return;
+  console.log(tempData);
   res.send(tempData);
 };
