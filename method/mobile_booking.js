@@ -66,7 +66,7 @@ exports.mobileVerifyBooking = async (req, res) => {
           return 0;
         }
         for (let k = 0; k < authers.length; k++) {
-          if (authers[k] === body.user_id) {
+          if (authers[k]._id === body.user_id && table === authers[k].type) {
             const msg = "You are already booked to the current slot";
             res.status(400).send({ msg });
             return 0;
@@ -180,7 +180,7 @@ exports.mobileBookTruf = async (req, res) => {
           return 0;
         }
         for (let k = 0; k < authers.length; k++) {
-          if (authers[k] === body.user_id) {
+          if (authers[k]._id === body.user_id && table === authers[k].type) {
             var msg = "You are already booked to the current slot";
             res.status(400).send({ msg });
             return 0;
