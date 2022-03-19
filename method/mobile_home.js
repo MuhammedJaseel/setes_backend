@@ -91,6 +91,5 @@ exports.mobileGethome = async (req, res) => {
       error = true;
     });
   if (error) return;
-  console.log(tempData);
   res.send(tempData);
 };
