@@ -26,14 +26,13 @@ exports.ctakerAddEvent = async (req, res) => {
         putTable(table, { _id }, { $set: updateBody })
           .then(() => {
             res.send({ msg: "Succesfully updated" });
-            console.log(body.who.isguest);
             if (!body.who.isguest)
               try {
                 _id = ObjectId(body.who._id);
                 getTable("users", { _id }).then((user) => {
-                  console.log(user);
                   updateBody = {};
                   updateBody[body.item] = (user[body.item] ?? 0) + 1;
+                  console.log(updateBody);
                   if (user.prime)
                     putTable("users", { _id }, { $set: updateBody });
                 });
