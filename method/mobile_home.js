@@ -35,10 +35,8 @@ exports.mobileGethome = async (req, res) => {
       error = true;
     });
   if (error) return;
-  var filter = {
-    status: { $in: ["Fulltime", "Started"] },
-  };
-  await getTables("matchs_live", { filter, limit: 15 })
+
+  await getTables("matchs_live", { limit: 15 })
     .then(async (bookings) => {
       var _id;
       for (let i = 0; i < bookings.length; i++) {
@@ -64,7 +62,7 @@ exports.mobileGethome = async (req, res) => {
       res.status(502).send({ msg: "Database Error __BOOKINGS__" });
       error = true;
     });
-  await getTables("matchs_fulltime", { filter, limit: 15 })
+  await getTables("matchs_fulltime", { limit: 15 })
     .then(async (bookings) => {
       var _id;
       for (let i = 0; i < bookings.length; i++) {
