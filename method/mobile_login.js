@@ -121,6 +121,9 @@ exports.mobileEnterasGust = async (req, res) => {
     });
   if (error) return;
   postTable("users_guest", body)
-    .then((data_1) => res.send({ key, _id: data_1.insertedId, guest: true }))
+    .then((data_1) => {
+      body._id = data_1.insertedId;
+      res.send(body);
+    })
     .catch((e) => res.status(502).send({ msg: "Database Error" }));
 };
