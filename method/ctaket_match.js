@@ -116,7 +116,7 @@ exports.ctakerGetAllMatchs = async (req, res) => {
     .then((bookings) => {
       if (bookings != null) {
         for (let i = 0; i < bookings.length; i++) bookings[i].status = "Booked";
-        myRes.data = myRes.data.concat(bookings);
+        data = data.concat(bookings);
       }
     })
     .catch((err) => {
@@ -128,7 +128,7 @@ exports.ctakerGetAllMatchs = async (req, res) => {
       if (bookings != null) {
         for (let i = 0; i < bookings.length; i++)
           bookings[i].status = "Started";
-        myRes.data = myRes.data.concat(bookings);
+        data = data.concat(bookings);
       }
     })
     .catch((err) => {
@@ -140,7 +140,7 @@ exports.ctakerGetAllMatchs = async (req, res) => {
       if (bookings != null) {
         for (let i = 0; i < bookings.length; i++)
           bookings[i].status = "Fulltime";
-        myRes.data = myRes.data.concat(bookings);
+        data = data.concat(bookings);
       }
     })
     .catch((err) => {
@@ -152,7 +152,7 @@ exports.ctakerGetAllMatchs = async (req, res) => {
       if (bookings != null) {
         for (let i = 0; i < bookings.length; i++)
           bookings[i].status = "Cancelled";
-        myRes.data = myRes.data.concat(bookings);
+        data = data.concat(bookings);
       }
     })
     .catch((err) => {
