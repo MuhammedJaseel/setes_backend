@@ -119,7 +119,10 @@ exports.ctakerGetAllMatchs = async (req, res) => {
         myRes.data = myRes.data.concat(bookings);
       }
     })
-    .catch(() => (error = true));
+    .catch((err) => {
+      console.log(err);
+      error = true;
+    });
   await getnolimitTables("matchs_live", { filter: { ctaker } })
     .then((bookings) => {
       if (bookings != null) {
@@ -128,7 +131,10 @@ exports.ctakerGetAllMatchs = async (req, res) => {
         myRes.data = myRes.data.concat(bookings);
       }
     })
-    .catch(() => (error = true));
+    .catch((err) => {
+      console.log(err);
+      error = true;
+    });
   await getnolimitTables("matchs_fulltime", { filter: { ctaker } })
     .then((bookings) => {
       if (bookings != null) {
@@ -137,7 +143,10 @@ exports.ctakerGetAllMatchs = async (req, res) => {
         myRes.data = myRes.data.concat(bookings);
       }
     })
-    .catch(() => (error = true));
+    .catch((err) => {
+      console.log(err);
+      error = true;
+    });
   await getnolimitTables("matchs_cancelled", { filter: { ctaker } })
     .then((bookings) => {
       if (bookings != null) {
@@ -146,7 +155,10 @@ exports.ctakerGetAllMatchs = async (req, res) => {
         myRes.data = myRes.data.concat(bookings);
       }
     })
-    .catch(() => (error = true));
+    .catch((err) => {
+      console.log(err);
+      error = true;
+    });
   for (let i = 0; i < data.length; i++) {
     try {
       var _id = ObjectId(data[i].slot_id);
