@@ -14,7 +14,6 @@ exports.ctakerAddEvent = async (req, res) => {
   var table = body.status == "Started" ? "matchs_live" : "matchs_fulltime";
   await getTable(table, { _id })
     .then(async (booking) => {
-      console.log(booking);
       if (booking !== null) {
         var events = booking.events;
         var item = booking[body.item];
@@ -32,7 +31,7 @@ exports.ctakerAddEvent = async (req, res) => {
                 getTable("users", { _id }).then((user) => {
                   updateBody = {};
                   updateBody[body.item] = (user[body.item] ?? 0) + 1;
-                  console.log(updateBody);
+
                   if (user.prime)
                     putTable("users", { _id }, { $set: updateBody });
                 });
