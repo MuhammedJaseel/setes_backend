@@ -153,7 +153,8 @@ exports.ctakerGetAllMatchs = async (req, res) => {
       await getTable("slots", { _id })
         .then((slot) => (data[i].slot = slot))
         .catch(() => (error = true));
-    } catch (error) {
+    } catch (err) {
+      console.log(err);
       error = true;
     }
   }
