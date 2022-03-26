@@ -64,11 +64,14 @@ const { connectWebSocket } = require("./module/web_socket");
 const { getAllConnectedSocket } = require("./module/web_socket");
 
 const { empty } = require("./module/empty");
-const { getTable, getTables } = require("./module/database");
 const { mobileGetPublicProfile } = require("./method/mobile_public");
+
+const { inviteUser } = require("./module/invite_user");
 
 app.get("/", empty);
 app.use("/asset", express.static("public_asset"));
+
+app.post("/invite", inviteUser);
 
 app.post("/mobile/isuptodate", mobileIsuptodate);
 app.post("/mobile/sendotp", mobileSendotp);
