@@ -67,6 +67,7 @@ const { empty } = require("./module/empty");
 const { mobileGetPublicProfile } = require("./method/mobile_public");
 
 const { inviteUser } = require("./module/invite_user");
+const { adminBrodcastMsg } = require("./method/admin_alert");
 
 app.get("/", empty);
 app.use("/asset", express.static("public_asset"));
@@ -129,6 +130,7 @@ app.put("/admin/ctaker", adminAuth, adminPutCtaker);
 app.delete("/admin/ctaker", adminAuth, adminDeleteCtaker);
 app.get("/admin/assets", adminAuth, adminGetassets);
 app.put("/admin/assets", adminAuth, adminPutassets);
+app.post("/admin/alert", adminAuth, adminBrodcastMsg);
 
 app.post("/ctaker/login", ctakerLogin);
 app.get("/ctaker/profile", ctakerAuth, ctakerGetProfile);
