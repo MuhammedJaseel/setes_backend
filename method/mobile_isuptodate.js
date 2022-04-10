@@ -1,9 +1,8 @@
 const { ObjectId } = require("mongodb");
 const { getTable } = require("../module/database");
-const net = require("os").networkInterfaces();
 
 exports.mobileIsuptodate = async (req, res) => {
-  console.log(net);
+  console.log(req.socket.remoteAddress);
   const ver = req.body.ver;
   const logged = req.body.logged;
   const key = req.body.key;
