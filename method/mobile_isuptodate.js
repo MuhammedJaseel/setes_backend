@@ -5,7 +5,7 @@ exports.mobileIsuptodate = async (req, res) => {
   console.log(req.socket.remoteAddress);
   console.log(req.connection.remoteAddress);
   console.log(req.ip);
-  console.log(req.info.remoteAddress);
+  console.log(req.headers['X-Client-IP']);
   const ver = req.body.ver;
   const logged = req.body.logged;
   const key = req.body.key;
