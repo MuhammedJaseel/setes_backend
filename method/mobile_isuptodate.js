@@ -4,7 +4,7 @@ const { getTable } = require("../module/database");
 exports.mobileIsuptodate = async (req, res) => {
   console.log(req.socket.remoteAddress);
   console.log(req.connection.remoteAddress);
-  console.log(req.headers);
+  console.log(req.ip);
   console.log(req.headers['x-forwarded-for']);
   const ver = req.body.ver;
   const logged = req.body.logged;
