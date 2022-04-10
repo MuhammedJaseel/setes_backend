@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongodb");
-const { getTable } = require("../module/database");
+const { getTable, putTable } = require("../module/database");
 var requestIp = require("request-ip");
 
 exports.mobileIsuptodate = async (req, res) => {
@@ -23,9 +23,22 @@ exports.mobileIsuptodate = async (req, res) => {
           delete user.bookings;
           if (!req.body.seen) {
             const userIp = requestIp.getClientIp(req);
-            getTable("inivites", { piblicIp: userIp }).then((inviter) => {
-              if (inviter != null) user.inviter = inviter.inviter;
-            });
+            getTable("inivites", { deviceMAC: req.body.deviceMAC }).then(
+              (data) => {
+                if (data === null) {
+                  getTable("inivites", { piblicIp: userIp }).then((inviter) => {
+                    if (inviter != null) {
+                      user.inviter = inviter.inviter;
+                      putTable(
+                        "inivites",
+                        { piblicIp: userIp },
+                        { $set: { deviceMAC: req.body.deviceMAC } }
+                      );
+                    }
+                  });
+                }
+              }
+            );
           }
           res.send(user);
         } else res.status(401).send({ msg: "Not a valid user" });
