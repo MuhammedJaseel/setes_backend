@@ -1,9 +1,8 @@
 const { ObjectId } = require("mongodb");
 const { getTable } = require("../module/database");
-var requestIp = require('request-ip');
+var requestIp = require("request-ip");
 
 exports.mobileIsuptodate = async (req, res) => {
-  console.log(requestIp.getClientIp(req));
   const ver = req.body.ver;
   const logged = req.body.logged;
   const key = req.body.key;
@@ -22,6 +21,12 @@ exports.mobileIsuptodate = async (req, res) => {
         if (user === null) res.status(401).send({ msg: "Not a valid user" });
         else if (user.key === key) {
           delete user.bookings;
+          if (!req.body.seen) {
+            const userIp = requestIp.getClientIp(req);
+            getTable("inivites", { piblicIp: userIp }).then((inviter) => {
+              if (inviter != null) user.inviter = inviter.inviter;
+            });
+          }
           res.send(user);
         } else res.status(401).send({ msg: "Not a valid user" });
       })
