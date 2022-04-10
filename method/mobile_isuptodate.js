@@ -15,35 +15,43 @@ exports.mobileIsuptodate = async (req, res) => {
   }
   if (logged) {
     const table = req.body.isguest ? "users_guest" : "users";
-
     await getTable(table, { _id })
       .then((user) => {
         if (user === null) res.status(401).send({ msg: "Not a valid user" });
         else if (user.key === key) {
           delete user.bookings;
-          if (!req.body.seen) {
-            const userIp = requestIp.getClientIp(req);
-            getTable("inivites", { deviceMAC: req.body.deviceMAC }).then(
-              (data) => {
-                if (data === null) {
-                  getTable("inivites", { piblicIp: userIp }).then((inviter) => {
-                    if (inviter != null) {
-                      user.inviter = inviter.inviter;
-                      putTable(
-                        "inivites",
-                        { piblicIp: userIp },
-                        { $set: { deviceMAC: req.body.deviceMAC } }
-                      );
-                    }
-                  });
-                }
-              }
-            );
-          }
-          console.log(user)
           res.send(user);
         } else res.status(401).send({ msg: "Not a valid user" });
       })
       .catch(() => res.status(502).send({ msg: "Database Error 1" }));
-  } else res.send("Yes, you are up to date");
+  } else {
+    if (!req.body.seen) {
+      const userIp = requestIp.getClientIp(req);
+      getTable("inivites", { deviceMAC: req.body.deviceMAC })
+        .then((data) => {
+          if (data === null) {
+            getTable("inivites", { piblicIp: userIp })
+              .then((inviter) => {
+                if (inviter != null) {
+                  console.log({
+                    inviter: inviter.inviter,
+                    msg: "Yes, you are up to date",
+                  });
+                  res.send({
+                    inviter: inviter.inviter,
+                    msg: "Yes, you are up to date",
+                  });
+                  putTable(
+                    "inivites",
+                    { piblicIp: userIp },
+                    { $set: { deviceMAC: req.body.deviceMAC } }
+                  );
+                }
+              })
+              .catch(() => res.status(502).send({ msg: "Database Error 1" }));
+          }
+        })
+        .catch(() => res.status(502).send({ msg: "Database Error 1" }));
+    }
+  }
 };
