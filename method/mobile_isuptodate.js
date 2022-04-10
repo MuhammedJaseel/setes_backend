@@ -49,7 +49,7 @@ exports.mobileIsuptodate = async (req, res) => {
                 }
               })
               .catch(() => res.status(502).send({ msg: "Database Error 1" }));
-          }
+          } else res.send({ inviter: "", msg: "Yes, you are up to date" });
         })
         .catch(() => res.status(502).send({ msg: "Database Error 1" }));
     }
