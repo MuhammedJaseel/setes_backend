@@ -2,10 +2,7 @@ const { ObjectId } = require("mongodb");
 const { getTable } = require("../module/database");
 
 exports.mobileIsuptodate = async (req, res) => {
-  console.log(req.socket.remoteAddress);
-  console.log(req.connection.remoteAddress);
-  console.log(req.ip);
-  console.log(req.headers['X-Client-IP']);
+  console.log(req);
   const ver = req.body.ver;
   const logged = req.body.logged;
   const key = req.body.key;
