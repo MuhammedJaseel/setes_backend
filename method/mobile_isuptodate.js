@@ -1,8 +1,9 @@
 const { ObjectId } = require("mongodb");
 const { getTable } = require("../module/database");
+var requestIp = require('request-ip');
 
 exports.mobileIsuptodate = async (req, res) => {
-  console.log(req);
+  console.log(requestIp.getClientIp(req));
   const ver = req.body.ver;
   const logged = req.body.logged;
   const key = req.body.key;
