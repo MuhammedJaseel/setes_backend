@@ -40,6 +40,7 @@ exports.mobileIsuptodate = async (req, res) => {
               }
             );
           }
+          console.log(user)
           res.send(user);
         } else res.status(401).send({ msg: "Not a valid user" });
       })
