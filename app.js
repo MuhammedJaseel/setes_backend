@@ -145,6 +145,7 @@ app.get("/testbg", (req, res) => {
   res.send("done");
   console.log(Date());
 });
+
 app.get("*", (req, res) => res.send("Hello World!"));
 
 const key = fs.readFileSync("server.key");
